@@ -3,6 +3,7 @@
 //global variables
 unsigned int indices[] = { 0, 1, 2 };
 Transform transform;
+Transform transform2;
 
 
 MainGame::MainGame() : _gameDisplay(1024, 768, "Game Window"), _gameState(GameState::PLAY), counter(0)/*, mesh(), mesh1(), mesh2(), myCamera()*/
@@ -31,13 +32,17 @@ void MainGame::InitSystems()
 {
 	_gameDisplay.InitDisplay();
 
-	mesh2.LoadModel("..\\res\\monkey3.obj"); // might need .obj
-	
+	mesh2.LoadModel("..\\res\\monkey3.obj");
+
+	mesh1.LoadModel("..\\res\\monkey3.obj");
+
 	// texture
 	texture.LoadTexture("..\\res\\bricks.jpg");
+	texture2.LoadTexture("..\\res\\water.jpg");
 
 	// shader
 	shader.SetUp("..\\res\\shader");
+	shader2.SetUp("..\\res\\shader");
 
 	myCamera.initCamera(glm::vec3(0, 0, -5), 70.0f, (float)_gameDisplay.GetWidth() / _gameDisplay.GetHeight(), 0.01f, 1000.0f);
 
@@ -80,9 +85,13 @@ void MainGame::DrawGame()
 	//Texture texture.TextureLoad("..\\res\\bricks.jpg"); //load texture
 	//Texture texture1("..\\res\\water.jpg"); //load texture
 
+	// to get another model, need another 
+
+	//model 1
 	transform.SetPos(glm::vec3(sinf(-counter), 0.0f, 0.0f));
 	transform.SetRot(glm::vec3(0.0f, counter * 2.0f, 0.0f));
 	transform.SetScale(glm::vec3(1.0f, 1.0f, 1.0f));
+
 	/*transform.SetPos(glm::vec3(sinf(counter), 0.0, 0.0));
 	transform.SetRot(glm::vec3(0.0, 0.0, counter * 5));
 	transform.SetScale(glm::vec3(sinf(counter), sinf(counter), sinf(counter)));*/
@@ -90,24 +99,23 @@ void MainGame::DrawGame()
 	shader.Bind();
 	shader.Update(transform, myCamera);
 	texture.Bind(0);
-	mesh2.Draw();
+	mesh2.Draw(); // model 1
+
+	//model 2
+	transform2.SetPos(glm::vec3(sinf(counter), 0.0f, 0.0f));
+	transform2.SetRot(glm::vec3(0.0f, counter * 2.0f, 0.0f));
+	transform2.SetScale(glm::vec3(1.0f, 1.0f, 1.0f));
+
+	shader2.Bind();
+	shader2.Update(transform2, myCamera);
+	texture2.Bind(0);
+	mesh1.Draw(); // model 2
+
+
 	counter = counter + 0.01f;
 
 
 	_gameDisplay.SwapBuffer();
-
-
-	////triangle 1
-	//Vertex vertices[] = { Vertex(glm::vec3(-0.5f, -0.5f, 0.0f), glm::vec2(0.0f, 0.0f)),
-	//					  Vertex(glm::vec3(0.0f, 0.5f, 0.0f), glm::vec2(0.5f, 1.0f)),
-	//					  Vertex(glm::vec3(0.5f, -0.5f, 0.0f), glm::vec2(1.0f, 0.0f)) 
-	//};
-
-	////triangle 2
-	//Vertex vertices1[] = { Vertex(glm::vec3(-0.5f, -0.5f, 0.0f), glm::vec2(0.0f, 0.0f)),
-	//					  Vertex(glm::vec3(0.0f, 0.5f, 0.0f), glm::vec2(0.5f, 1.0f)),
-	//					  Vertex(glm::vec3(0.5f, -1.0f, 0.0f), glm::vec2(1.0f, 0.0f)) 
-	//};
 
 
 

@@ -27,7 +27,10 @@ class MainGame
 	Mesh mesh2;
 	Camera myCamera;
 	Texture texture;
+	Texture texture2;
 	Shader shader;
+	Shader shader2;
+
 
 	float counter;
 
