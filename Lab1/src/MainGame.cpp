@@ -87,9 +87,9 @@ void MainGame::DrawGame()
 
 	// to get another model, need another 
 
-	//model 1
-	transform.SetPos(glm::vec3(sinf(-counter), 0.0f, 0.0f));
-	transform.SetRot(glm::vec3(0.0f, counter * 2.0f, 0.0f));
+	//model 1 - brick monkey
+	transform.SetPos(glm::vec3(-counter + 4.0f, 0.0f, 3.0f));
+	transform.SetRot(glm::vec3(0.0f, counter * 1.0f, 0.0f));
 	transform.SetScale(glm::vec3(1.0f, 1.0f, 1.0f));
 
 	/*transform.SetPos(glm::vec3(sinf(counter), 0.0, 0.0));
@@ -101,9 +101,9 @@ void MainGame::DrawGame()
 	texture.Bind(0);
 	mesh2.Draw(); // model 1
 
-	//model 2
-	transform2.SetPos(glm::vec3(sinf(counter), 0.0f, 0.0f));
-	transform2.SetRot(glm::vec3(0.0f, counter * 2.0f, 0.0f));
+	//model 2 - water monkey
+	transform2.SetPos(glm::vec3(counter - 4.0f, 0.0f, 3.0f));
+	transform2.SetRot(glm::vec3(0.0f, -counter * 1.0f, 0.0f));
 	transform2.SetScale(glm::vec3(1.0f, 1.0f, 1.0f));
 
 	shader2.Bind();
@@ -112,7 +112,7 @@ void MainGame::DrawGame()
 	mesh1.Draw(); // model 2
 
 
-	counter = counter + 0.01f;
+	counter = counter + 0.005f;
 
 
 	_gameDisplay.SwapBuffer();
