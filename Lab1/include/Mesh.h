@@ -53,7 +53,7 @@ public:
 	
 	//Mesh(Vertex* vertices, unsigned int numVertices);
 	
-	Mesh() : vertexArrayObject(0), vertexArrayBuffers{ NUM_BUFFERS }, drawCount(0), radius(0) {};
+	Mesh() : vertexArrayObject(0), vertexArrayBuffers{ NUM_BUFFERS }, drawCount(0), radius(15.0f) {};
 	~Mesh();
 
 	void Init(Vertex* vertices, unsigned int numVertices, unsigned int* indices, unsigned int numIndices);

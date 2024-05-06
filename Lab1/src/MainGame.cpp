@@ -81,15 +81,13 @@ void MainGame::DrawGame()
 	
 	// check for collision here?
 	if (Collided(transform1.GetPos(), mesh1.GetRadius(), transform2.GetPos(), mesh2.GetRadius()))
-	{
-		//std::cout << "Objects have collided!" << std::endl;
-		
-		std::cout << "Model 1 radius: " << mesh1.GetRadius() << std::endl;
-		std::cout << "Model 2 radius: " << mesh2.GetRadius() << std::endl;
+	{	
+		//std::cout << "Model 1 radius: " << mesh1.GetRadius() << std::endl;
+		//std::cout << "Model 2 radius: " << mesh2.GetRadius() << std::endl;
 	}
 
-	// to get another model, need another 
-
+	// if pos reaches edge of window then turn back
+	
 	//model 1 - brick monkey
 	transform1.SetPos(glm::vec3(-counter + 4.0f, 0.0f, 3.0f));
 	transform1.SetRot(glm::vec3(0.0f, counter * 1.0f, 0.0f));
@@ -155,12 +153,21 @@ bool MainGame::Collided(glm::vec3 pos1, float radius1, glm::vec3 pos2, float rad
 {
 	//if radius1 + radius2 < distance from centre points then colliding
 	// distance = ((x1 + x2) * (x1 + x2)) + ((y1 + y2) * (y1 + y2)) + ((z1 + z2) * (z1 + z2))
-	float distance = ((pos1.x + pos2.x) * (pos1.x + pos2.x)) + ((pos1.y + pos2.y) * (pos1.y + pos2.y)) + ((pos1.z + pos2.z) * (pos1.z + pos2.z));
+	float distanceNotSqrd = ((pos1.x - pos2.x) * (pos1.x - pos2.x)) + ((pos1.y - pos2.y) * (pos1.y - pos2.y)) + ((pos1.z - pos2.z) * (pos1.z - pos2.z));
 	float combinedRadius = radius1 + radius2;
 
-	float sum = distance - combinedRadius; // temp for cout? 
+	float distance = distanceNotSqrd * distanceNotSqrd;
 
-	//std::cout << sum << std::endl;
+	//float sum = distance - combinedRadius; // temp for cout? 
+	/*std::cout << "Distance Sqrd: " << distance << std::endl;
+	std::cout << "Distance Not Sqrd: " << distanceNotSqrd << std::endl;*/
 
-	return combinedRadius < distance;
+	if (combinedRadius > distance)
+	{
+		std::cout << "Objects have collided!" << std::endl;
+		return true;
+	}
+
+	//std::cout << "Objects are not colliding" << std::endl;
+	return false;
 }
