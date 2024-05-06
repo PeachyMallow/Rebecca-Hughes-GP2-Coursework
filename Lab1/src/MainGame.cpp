@@ -2,7 +2,7 @@
 
 //global variables
 unsigned int indices[] = { 0, 1, 2 };
-Transform transform;
+Transform transform1;
 Transform transform2;
 
 
@@ -32,9 +32,9 @@ void MainGame::InitSystems()
 {
 	_gameDisplay.InitDisplay();
 
-	mesh2.LoadModel("..\\res\\monkey3.obj");
-
 	mesh1.LoadModel("..\\res\\monkey3.obj");
+
+	mesh2.LoadModel("..\\res\\monkey3.obj");
 
 	// texture
 	texture.LoadTexture("..\\res\\bricks.jpg");
@@ -79,27 +79,30 @@ void MainGame::DrawGame()
 {
 	_gameDisplay.ClearDisplay(0.0f, 0.0f, 0.0f, 1.0f);
 	
-	// different from commented out because only one model is used instead of 2
-
-	//Shader shader("..\\res\\shader"); //new shader
-	//Texture texture.TextureLoad("..\\res\\bricks.jpg"); //load texture
-	//Texture texture1("..\\res\\water.jpg"); //load texture
+	// check for collision here?
+	if (Collided(transform1.GetPos(), mesh1.GetRadius(), transform2.GetPos(), mesh2.GetRadius()))
+	{
+		//std::cout << "Objects have collided!" << std::endl;
+		
+		std::cout << "Model 1 radius: " << mesh1.GetRadius() << std::endl;
+		std::cout << "Model 2 radius: " << mesh2.GetRadius() << std::endl;
+	}
 
 	// to get another model, need another 
 
 	//model 1 - brick monkey
-	transform.SetPos(glm::vec3(-counter + 4.0f, 0.0f, 3.0f));
-	transform.SetRot(glm::vec3(0.0f, counter * 1.0f, 0.0f));
-	transform.SetScale(glm::vec3(1.0f, 1.0f, 1.0f));
+	transform1.SetPos(glm::vec3(-counter + 4.0f, 0.0f, 3.0f));
+	transform1.SetRot(glm::vec3(0.0f, counter * 1.0f, 0.0f));
+	transform1.SetScale(glm::vec3(1.0f, 1.0f, 1.0f));
 
 	/*transform.SetPos(glm::vec3(sinf(counter), 0.0, 0.0));
 	transform.SetRot(glm::vec3(0.0, 0.0, counter * 5));
 	transform.SetScale(glm::vec3(sinf(counter), sinf(counter), sinf(counter)));*/
 
 	shader.Bind();
-	shader.Update(transform, myCamera);
+	shader.Update(transform1, myCamera);
 	texture.Bind(0);
-	mesh2.Draw(); // model 1
+	mesh1.Draw(); // model 1
 
 	//model 2 - water monkey
 	transform2.SetPos(glm::vec3(counter - 4.0f, 0.0f, 3.0f));
@@ -109,14 +112,11 @@ void MainGame::DrawGame()
 	shader2.Bind();
 	shader2.Update(transform2, myCamera);
 	texture2.Bind(0);
-	mesh1.Draw(); // model 2
-
+	mesh2.Draw(); // model 2
 
 	counter = counter + 0.005f;
 
-
 	_gameDisplay.SwapBuffer();
-
 
 
 	////access number of elements in array by dividing the size of the array by the size of the data type it contains
@@ -134,7 +134,6 @@ void MainGame::DrawGame()
 	//shader.Update(transform); 
 	//texture.Bind(0);
 	//mesh.Draw(); //draw the mesh
-
 	//Mesh mesh1(vertices1, sizeof(vertices1) / sizeof(vertices1[0])); //create a mesh object 
 	//Shader shader1("..\\res\\shader"); //create a shader
 	//Texture texture1("..\\res\\water.jpg"); //load texture
@@ -145,12 +144,23 @@ void MainGame::DrawGame()
 	//shader1.Bind();
 	//shader1.Update(transform1);
 	//texture1.Bind(1);
-
 	//mesh1.Draw();
-
 	//counter = counter + 0.01f;
-
-	//
-
 	//_gameDisplay.SwapBuffer(); // swap buffers
+}
+
+//pass in other models 
+// collision detection               MIGHT NOT NEED ONE OF THE AXIS?
+bool MainGame::Collided(glm::vec3 pos1, float radius1, glm::vec3 pos2, float radius2)
+{
+	//if radius1 + radius2 < distance from centre points then colliding
+	// distance = ((x1 + x2) * (x1 + x2)) + ((y1 + y2) * (y1 + y2)) + ((z1 + z2) * (z1 + z2))
+	float distance = ((pos1.x + pos2.x) * (pos1.x + pos2.x)) + ((pos1.y + pos2.y) * (pos1.y + pos2.y)) + ((pos1.z + pos2.z) * (pos1.z + pos2.z));
+	float combinedRadius = radius1 + radius2;
+
+	float sum = distance - combinedRadius; // temp for cout? 
+
+	//std::cout << sum << std::endl;
+
+	return combinedRadius < distance;
 }

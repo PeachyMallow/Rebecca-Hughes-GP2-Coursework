@@ -19,6 +19,8 @@ class MainGame
 	void ProcessInput();
 	void GameLoop();
 	void DrawGame();
+	bool Collided(glm::vec3 pos1, float radius1, glm::vec3 pos2, float radius2);
+
 
 	Display _gameDisplay/*(1024, 768, const "Labs")*/;
 	GameState _gameState;

@@ -17,7 +17,7 @@ class Display
 	float _screenHeight;// do we need these these to be ints instead of casting to floats?
 
 public:
-	Display();
+	Display() {};
 	Display(float windowWidth, float windowHeight, const std::string& windowTitle) /*: _window(nullptr), _screenWidth(1024), _screenHeight(768), glContext(nullptr) {}*/;
 	~Display();
 

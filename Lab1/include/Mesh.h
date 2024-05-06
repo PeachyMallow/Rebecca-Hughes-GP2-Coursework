@@ -46,18 +46,23 @@ class Mesh
 	GLuint vertexArrayBuffers[NUM_BUFFERS]; // create our array of buffers
 	unsigned int drawCount; // how much of the vertexArrayObject's do we want to draw
 	
+	float radius;
+
 
 public: 
 	
 	//Mesh(Vertex* vertices, unsigned int numVertices);
 	
-	Mesh() : vertexArrayObject(0), drawCount(0) {};
+	Mesh() : vertexArrayObject(0), vertexArrayBuffers{ NUM_BUFFERS }, drawCount(0), radius(0) {};
 	~Mesh();
 
 	void Init(Vertex* vertices, unsigned int numVertices, unsigned int* indices, unsigned int numIndices);
 	void LoadModel(const std::string& fileName);
 	void InitModel(const IndexedModel& model);
 	void Draw();
+
+	float GetRadius() { return this->radius; };
+	void SetRadius(float newRadius) { this->radius = newRadius; };
 
 };
 

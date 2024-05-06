@@ -8,7 +8,7 @@ class Texture
 	GLuint textureHandler;
 
 public: 
-	Texture() {};
+	Texture() : textureHandler { 0 } {};
 	//Texture(const std::string& fileName);
 	~Texture();
 
