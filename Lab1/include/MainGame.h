@@ -2,6 +2,8 @@
 
 #include <SDL\SDL.h>
 #include <GL/glew.h>
+#include <AL/al.h> // for test
+#include "dr_lib/dr_wav.h"
 
 #include "Camera.h"
 #include "Display.h" 

@@ -147,7 +147,6 @@ void MainGame::DrawGame()
 	//_gameDisplay.SwapBuffer(); // swap buffers
 }
 
-//pass in other models 
 // collision detection               MIGHT NOT NEED ONE OF THE AXIS?
 bool MainGame::Collided(glm::vec3 pos1, float radius1, glm::vec3 pos2, float radius2)
 {
