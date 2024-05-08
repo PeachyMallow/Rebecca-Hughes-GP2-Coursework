@@ -39,15 +39,6 @@
     <ClCompile Include="src\obj_loader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\dr_lib_implementation.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\AudioMaster.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\AudioSource.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\MainGame.h">
@@ -80,10 +71,7 @@
     <ClInclude Include="include\Audio.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\AudioMaster.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\AudioSource.h">
+    <ClInclude Include="SoundLoader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

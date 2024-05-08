@@ -41,8 +41,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(IncludePath);$(SolutionDir)deps\include</IncludePath>
-    <LibraryPath>$(LibraryPath);$(SolutionDir)deps\lib\OpenAL;$(SolutionDir)deps\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)deps/include/;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)deps/lib/;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);;$(SolutionDir)deps\include</IncludePath>
@@ -59,7 +59,8 @@
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;opengl32.lib;glew32.lib;%(AdditionalDependencies)OpenAL32.lib;SDL2.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;opengl32.lib;glew32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <TargetMachine>MachineX86</TargetMachine>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -81,7 +82,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\Display.cpp" />
-    <ClCompile Include="src\dr_lib_implementation.c" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\MainGame.cpp" />
     <ClCompile Include="src\Mesh.cpp" />
