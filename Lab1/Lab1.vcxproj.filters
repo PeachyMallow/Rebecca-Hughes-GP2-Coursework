@@ -68,9 +68,6 @@
     <ClInclude Include="include\Camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Audio.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="SoundLoader.h">
       <Filter>Header Files</Filter>
     </ClInclude>

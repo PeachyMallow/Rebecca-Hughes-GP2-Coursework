@@ -50,7 +50,7 @@ void Texture::LoadTexture(const std::string& fileName)
 
 	if (imageData == NULL)
 	{
-		std::cerr << "Texture load failed for: " << fileName << std::endl;
+		std::cerr << "Texture load failed for: " << fileName << stbi_failure_reason() << std::endl;
 	}
 
 	glGenTextures(1, &textureHandler); //texture amount & addresses

@@ -144,9 +144,9 @@ GLuint Shader::CreateShader(const std::string& text, unsigned int type)
 	if (shader == 0) //if == 0 shader no created
 		std::cerr << "Error type creation failed " << type << std::endl;
 
-	const GLchar* stringSource[1]; //convert strings into list of c-strings
+	const GLchar* stringSource[1] = { nullptr }; //convert strings into list of c-strings
 	stringSource[0] = text.c_str();
-	GLint lengths[1];
+	GLint lengths[1] = { 0 };
 	lengths[0] = text.length();
 
 	glShaderSource(shader, 1, stringSource, lengths); //send source code to opengl

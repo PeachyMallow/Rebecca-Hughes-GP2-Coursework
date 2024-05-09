@@ -992,7 +992,7 @@ typedef uint8 stbi_dequantize_t;
 // .344 seconds on 3*anemones.jpg
 static void idct_block(uint8 *out, int out_stride, short data[64], stbi_dequantize_t *dequantize)
 {
-   int i,val[64],*v=val;
+   int i,val[64],*v = val;
    stbi_dequantize_t *dq = dequantize;
    uint8 *o;
    short *d = data;

@@ -4,6 +4,7 @@
 unsigned int indices[] = { 0, 1, 2 };
 Transform transform1;
 Transform transform2;
+Transform transform3;
 
 
 MainGame::MainGame() : _gameDisplay(1024, 768, "Game Window"), _gameState(GameState::PLAY), counter(0)/*, mesh(), mesh1(), mesh2(), myCamera()*/
@@ -32,17 +33,21 @@ void MainGame::InitSystems()
 {
 	_gameDisplay.InitDisplay();
 
-	mesh1.LoadModel("..\\res\\monkey3.obj");
+	mesh1.LoadModel("..\\res\\Frog.obj");
 
-	mesh2.LoadModel("..\\res\\monkey3.obj");
+	mesh2.LoadModel("..\\res\\Bee.obj");
+
+	mesh3.LoadModel("..\\res\\Pumpkin.obj");
 
 	// texture
-	texture.LoadTexture("..\\res\\bricks.jpg");
-	texture2.LoadTexture("..\\res\\water.jpg");
+	texture.LoadTexture("..\\res\\FrogTex.png");
+	texture2.LoadTexture("..\\res\\BeeTex.png");
+	texture3.LoadTexture("..\\res\\PumpkinTex.png");
 
 	// shader
 	shader.SetUp("..\\res\\shader");
 	shader2.SetUp("..\\res\\shader");
+	shader3.SetUp("..\\res\\shader");
 
 	myCamera.initCamera(glm::vec3(0, 0, -5), 70.0f, (float)_gameDisplay.GetWidth() / _gameDisplay.GetHeight(), 0.01f, 1000.0f);
 
@@ -88,10 +93,10 @@ void MainGame::DrawGame()
 
 	// if pos reaches edge of window then turn back
 	
-	//model 1 - brick monkey
+	//model 1 - frog
 	transform1.SetPos(glm::vec3(-counter + 4.0f, 0.0f, 3.0f));
 	transform1.SetRot(glm::vec3(0.0f, counter * 1.0f, 0.0f));
-	transform1.SetScale(glm::vec3(1.0f, 1.0f, 1.0f));
+	transform1.SetScale(glm::vec3(2.0f, 2.0f, 2.0f));
 
 	/*transform.SetPos(glm::vec3(sinf(counter), 0.0, 0.0));
 	transform.SetRot(glm::vec3(0.0, 0.0, counter * 5));
@@ -102,15 +107,26 @@ void MainGame::DrawGame()
 	texture.Bind(0);
 	mesh1.Draw(); // model 1
 
-	//model 2 - water monkey
+	//model 2 - bee
 	transform2.SetPos(glm::vec3(counter - 4.0f, 0.0f, 3.0f));
 	transform2.SetRot(glm::vec3(0.0f, -counter * 1.0f, 0.0f));
-	transform2.SetScale(glm::vec3(1.0f, 1.0f, 1.0f));
+	transform2.SetScale(glm::vec3(0.5f, 0.5f, 0.5f));
 
 	shader2.Bind();
 	shader2.Update(transform2, myCamera);
 	texture2.Bind(0);
 	mesh2.Draw(); // model 2
+
+
+	//model 2 - pumpkin
+	transform3.SetPos(glm::vec3(counter - 0.0f, 0.0f, 3.0f));
+	transform3.SetRot(glm::vec3(0.0f, counter * 1.0f, 0.0f));
+	transform3.SetScale(glm::vec3(0.75f, 0.75f, 0.75f));
+
+	shader3.Bind();
+	shader3.Update(transform3, myCamera);
+	texture3.Bind(0);
+	mesh3.Draw(); // model 2
 
 	counter = counter + 0.005f;
 

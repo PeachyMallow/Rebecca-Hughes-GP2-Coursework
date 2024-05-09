@@ -91,7 +91,6 @@
     <ClCompile Include="src\Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\Audio.h" />
     <ClInclude Include="include\Camera.h" />
     <ClInclude Include="include\Display.h" />
     <ClInclude Include="include\MainGame.h" />
