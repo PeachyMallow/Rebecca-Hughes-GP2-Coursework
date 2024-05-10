@@ -61,7 +61,8 @@ void Shader::SetUp(const std::string& filename)
 	glValidateProgram(program); // check the entire program is valid
 	CheckShaderError(program, GL_VALIDATE_STATUS, true, "Error: Shader program not valid");
 
-	uniforms[TRANSFORM_U] = glGetUniformLocation(program, "transform");
+	uniforms[U_TRANSFORM] = glGetUniformLocation(program, "transform");
+	uniforms[U_LIGHTING] = glGetUniformLocation(program, "lighting");
 }
 
 void Shader::Bind()
@@ -72,7 +73,7 @@ void Shader::Bind()
 void Shader::Update(const Transform& transform, const Camera& camera)
 {
 	glm::mat4 mvp = camera.GetViewProjection() * transform.GetModel();
-	glUniformMatrix4fv(uniforms[TRANSFORM_U], 1, GLU_FALSE, &mvp[0][0]);
+	glUniformMatrix4fv(uniforms[U_TRANSFORM], 1, GLU_FALSE, &mvp[0][0]);
 
 
 	/*glm::mat4 model = transform.GetModelMatrix();
