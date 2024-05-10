@@ -50,9 +50,9 @@ void Shader::SetUp(const std::string& filename)
 		glAttachShader(program, shader);
 	}
 
-	glBindAttribLocation(program, 0, "position");
-	glBindAttribLocation(program, 1, "texCoord");
-	glBindAttribLocation(program, 2, "normals");
+	glBindAttribLocation(program, 0, "v_pos");
+	glBindAttribLocation(program, 1, "v_texCoord");
+	glBindAttribLocation(program, 2, "v_normals");
 
 
 	glLinkProgram(program); // creates exe that will run on the GPU shaders
@@ -105,25 +105,24 @@ std::string Shader::LoadShader(const std::string& fileName)
 	return output;
 }
 
-// check for errors
-void Shader::CheckShaderError(GLuint shader, GLuint flag, bool isProgram, const std::string& errorMessage)
+void Shader::CheckShaderError(GLuint shader, GLuint flag, bool programValid, const std::string& errorMessage)
 {
-	GLint success = 0;
+	GLint result = 0;
 	GLchar error[1024] = { 0 };
 
-	if (isProgram)
+	if (programValid)
 	{
-		glGetProgramiv(shader, flag, &success);
+		glGetProgramiv(shader, flag, &result);
 	}
 
 	else
 	{
-		glGetShaderiv(shader, flag, &success);
+		glGetShaderiv(shader, flag, &result);
 	}
 
-	if (success == GL_FALSE)
+	if (result == GL_FALSE)
 	{
-		if (isProgram)
+		if (programValid)
 		{
 			glGetProgramInfoLog(shader, sizeof(error), NULL, error);
 		}
@@ -137,23 +136,24 @@ void Shader::CheckShaderError(GLuint shader, GLuint flag, bool isProgram, const 
 	}
 }
 
-GLuint Shader::CreateShader(const std::string& text, unsigned int type)
+GLuint Shader::CreateShader(const std::string& shaderSrc, GLuint shaderType)
 {
-	GLuint shader = glCreateShader(type); //create shader based on specified type
+	GLuint shaderID = glCreateShader(shaderType); //create shader based on specified type
 
-	if (shader == 0) //if == 0 shader no created
-		std::cerr << "Error type creation failed " << type << std::endl;
+	if (shaderID == 0) //if == 0 shader no created
+		std::cerr << "Error shader type creation failed " << shaderType << std::endl;
 
-	const GLchar* stringSource[1] = { nullptr }; //convert strings into list of c-strings
-	stringSource[0] = text.c_str();
-	GLint lengths[1] = { 0 };
-	lengths[0] = text.length();
+	const GLchar* source[1] = { nullptr }; //convert strings into list of c-strings    DEPENDANT ON FUTURE WORK COULD MAKE NOT ARRAYS if so make string source in glShaderSource a ref
+	source[0] = shaderSrc.c_str();
 
-	glShaderSource(shader, 1, stringSource, lengths); //send source code to opengl
-	glCompileShader(shader); //get open gl to compile shader code
+	GLint lengths[1] = { 0 }; // const? 
+	lengths[0] = shaderSrc.length();
 
-	CheckShaderError(shader, GL_COMPILE_STATUS, false, "Error compiling shader!"); //check for compile error
+	glShaderSource(shaderID, 1, &source[0], &lengths[0]); //send source code to opengl
+	glCompileShader(shaderID); //get open gl to compile shader code
 
-	return shader;
+	CheckShaderError(shaderID, GL_COMPILE_STATUS, false, "Error compiling shader!"); //check for compile error
+
+	return shaderID;
 }
 

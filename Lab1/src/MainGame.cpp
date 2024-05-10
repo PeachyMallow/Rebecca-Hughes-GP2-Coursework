@@ -45,10 +45,10 @@ void MainGame::InitSystems()
 	texture3.LoadTexture("..\\res\\PumpkinTex.png");
 
 	// shader
-	//shader.SetUp("..\\res\\toonShader");
-	shader.SetUp("..\\res\\basicShader");
+	shader.SetUp("..\\res\\toonShader");
+	//shader.SetUp("..\\res\\basicShader");
 
-	//shader2.SetUp("..\\res\\shader");
+	//shader2.SetUp("..\\res\\basicShader");
 	//shader3.SetUp("..\\res\\shader");
 
 	myCamera.initCamera(glm::vec3(0, 0, -5), 70.0f, (float)_gameDisplay.GetWidth() / _gameDisplay.GetHeight(), 0.01f, 1000.0f);

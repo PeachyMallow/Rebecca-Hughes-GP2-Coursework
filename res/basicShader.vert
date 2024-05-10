@@ -1,14 +1,14 @@
 #version 120
 // called a passthrough shader
 
-attribute vec3 position; //linking from shader class
-attribute vec2 texCoord; //linking from shader class
+attribute vec4 v_pos; //changed to vec 4 to avoid changing it in main
+attribute vec2 v_texCoord; //linking from shader class
 
 varying vec2 texCoord0; 
 uniform mat4 transform; //linking from shader class
 
 void main()
 {
-	gl_Position = transform * vec4(position, 1.0); 
-	texCoord0 = texCoord;
+	gl_Position = transform * v_pos; 
+	texCoord0 = v_texCoord;
 }
