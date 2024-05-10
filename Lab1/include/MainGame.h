@@ -32,8 +32,8 @@ class MainGame
 	Texture texture2;
 	Texture texture3;
 	Shader shader;
-	Shader shader2;
-	Shader shader3;
+	//Shader shader2;
+	//Shader shader3;
 
 
 	float counter;

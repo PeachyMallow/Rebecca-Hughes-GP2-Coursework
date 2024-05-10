@@ -52,6 +52,7 @@ void Shader::SetUp(const std::string& filename)
 
 	glBindAttribLocation(program, 0, "position");
 	glBindAttribLocation(program, 1, "texCoord");
+	glBindAttribLocation(program, 2, "normals");
 
 
 	glLinkProgram(program); // creates exe that will run on the GPU shaders
@@ -77,7 +78,6 @@ void Shader::Update(const Transform& transform, const Camera& camera)
 	/*glm::mat4 model = transform.GetModelMatrix();
 	glUniformMatrix4fv(uniforms[TRANSFORM_U], 1, GLU_FALSE, &model[0][0]);*/
 }
-
 
 // read shaders from a text file
 std::string Shader::LoadShader(const std::string& fileName)

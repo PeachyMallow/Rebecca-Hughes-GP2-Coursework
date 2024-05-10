@@ -45,9 +45,11 @@ void MainGame::InitSystems()
 	texture3.LoadTexture("..\\res\\PumpkinTex.png");
 
 	// shader
-	shader.SetUp("..\\res\\shader");
-	shader2.SetUp("..\\res\\shader");
-	shader3.SetUp("..\\res\\shader");
+	//shader.SetUp("..\\res\\toonShader");
+	shader.SetUp("..\\res\\basicShader");
+
+	//shader2.SetUp("..\\res\\shader");
+	//shader3.SetUp("..\\res\\shader");
 
 	myCamera.initCamera(glm::vec3(0, 0, -5), 70.0f, (float)_gameDisplay.GetWidth() / _gameDisplay.GetHeight(), 0.01f, 1000.0f);
 
@@ -112,19 +114,19 @@ void MainGame::DrawGame()
 	transform2.SetRot(glm::vec3(0.0f, -counter * 1.0f, 0.0f));
 	transform2.SetScale(glm::vec3(0.5f, 0.5f, 0.5f));
 
-	shader2.Bind();
-	shader2.Update(transform2, myCamera);
+	shader.Bind();
+	shader.Update(transform2, myCamera);
 	texture2.Bind(0);
 	mesh2.Draw(); // model 2
 
 
 	//model 2 - pumpkin
-	transform3.SetPos(glm::vec3(counter - 0.0f, 0.0f, 3.0f));
+	transform3.SetPos(glm::vec3(counter - 0.0f, 1.0f, 3.0f));
 	transform3.SetRot(glm::vec3(0.0f, counter * 1.0f, 0.0f));
 	transform3.SetScale(glm::vec3(0.75f, 0.75f, 0.75f));
 
-	shader3.Bind();
-	shader3.Update(transform3, myCamera);
+	shader.Bind();
+	shader.Update(transform3, myCamera);
 	texture3.Bind(0);
 	mesh3.Draw(); // model 2
 
