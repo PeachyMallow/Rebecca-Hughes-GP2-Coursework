@@ -31,9 +31,9 @@ class MainGame
 	Texture texture;
 	Texture texture2;
 	Texture texture3;
-	Shader shader;
-	Shader shader2;
-	//Shader shader3;
+	Shader basicShader;
+	Shader toonShader;
+	Shader fogShader;
 
 
 	float counter;

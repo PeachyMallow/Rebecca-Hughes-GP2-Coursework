@@ -1,15 +1,20 @@
 #version 330 core
-// called a passthrough shader
 
-layout (location = 0) in vec4 v_pos;
-layout (location = 2) in vec3 v_normals;
+layout (location = 0) in vec4 vertexPos;
+layout (location = 1) in vec2 vertexTexCoord;
+layout (location = 2) in vec3 vertexNormals;
 
 out vec3 normal;
-uniform mat4 transform;
+out vec2 v_texCoord;
+out vec3 lightPos;
 
+uniform mat4 transform;
+uniform vec3 lighting;
 
 void main()
 {
-	normal = v_normals;
-	gl_Position = transform * v_pos;
+	v_texCoord = vertexTexCoord;
+	normal = vertexNormals;
+	lightPos = lighting;
+	gl_Position = transform * vertexPos;
 }

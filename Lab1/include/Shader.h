@@ -2,6 +2,7 @@
 
 #include <string>
 #include <GL\glew.h>
+#include <glm\gtc\type_ptr.hpp>
 
 #include <iostream> // needed?
 #include <fstream> // needed?
@@ -15,9 +16,12 @@ class Shader
 	/*Shader(const Shader& other) {};
 	void operator=(const Shader& other) {};*/
 	
+
+
 	enum
 	{
 		U_TRANSFORM, 
+		test,
 		U_LIGHTING,
 		NUM_UNIFORMS
 	};
@@ -39,6 +43,7 @@ public:
 	std::string LoadShader(const std::string& fileName);
 	void CheckShaderError(GLuint shader, GLuint flag, bool isProgram, const std::string& errorMessage);
 	GLuint CreateShader(const std::string& text, GLuint shaderType);
+	//void SetUniform()
 
 };
 

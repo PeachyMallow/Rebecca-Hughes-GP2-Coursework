@@ -50,9 +50,9 @@ void Shader::SetUp(const std::string& filename)
 		glAttachShader(program, shader);
 	}
 
-	glBindAttribLocation(program, 0, "v_pos");
-	glBindAttribLocation(program, 1, "v_texCoord");
-	glBindAttribLocation(program, 2, "v_normals");
+	glBindAttribLocation(program, 0, "vertexPos");
+	glBindAttribLocation(program, 1, "vertexTexCoord");
+	glBindAttribLocation(program, 2, "vertexNormals");
 
 
 	glLinkProgram(program); // creates exe that will run on the GPU shaders
@@ -62,18 +62,82 @@ void Shader::SetUp(const std::string& filename)
 	CheckShaderError(program, GL_VALIDATE_STATUS, true, "Error: Shader program not valid");
 
 	uniforms[U_TRANSFORM] = glGetUniformLocation(program, "transform");
-	uniforms[U_LIGHTING] = glGetUniformLocation(program, "lighting");
+	//uniforms[U_LIGHTING] = glGetUniformLocation(program, "lighting");
+	//
+	//if (uniforms[U_LIGHTING] == -1) {
+	//	// Handle the case where the uniform was not found in the shader program
+	//	std::cout << "Uniform 'lighting' not found in shader program" << std::endl;
+	//}
+	
+	//GLfloat lightPos[] = { 0.5f, 0.5f, 0.5f };
+
+	/*GLfloat r = 0.0f;
+	GLfloat g = 0.0f;
+	GLfloat b = 0.0f;
+
+	glUniform3f(uniforms[U_LIGHTING], r, g, b);*/
+
+	/*GLfloat light_pos[] = { 1.0f, 0.0f, 0.0f };
+	glUniform3fv(glGetUniformLocation(program, "lighting"), 1, light_pos);
+
+	GLenum error = glGetError();
+
+	if (error != GL_NO_ERROR) 
+	{
+		std::cout << "Error setting uniform value: " << error << std::endl;
+	}*/
 }
 
 void Shader::Bind()
 {
 	glUseProgram(program);
+
+	uniforms[U_LIGHTING] = glGetUniformLocation(program, "lighting");
+
+	if (uniforms[U_LIGHTING] == -1) {
+		// Handle the case where the uniform was not found in the shader program
+		std::cout << "Uniform 'lighting' not found in shader program" << std::endl;
+	}
+
+	//GLfloat lightPos[] = { 0.5f, 0.5f, 0.5f };
+
+	/*GLfloat r = 0.5f;
+	GLfloat g = 0.5f;
+	GLfloat b = 0.5f;
+
+	glUniform3f(uniforms[U_LIGHTING], r, g, b);*/
+
+	/*GLfloat light_pos[] = { 1.0f, 0.0f, 0.0f };
+	glUniform3fv(glGetUniformLocation(program, "lighting"), 1, light_pos);*/
+
+	/*GLenum error = glGetError();
+
+	if (error != GL_NO_ERROR)
+	{
+		std::cout << "Error setting uniform value: " << error << std::endl;
+	}*/
+
 }
 
 void Shader::Update(const Transform& transform, const Camera& camera)
 {
 	glm::mat4 mvp = camera.GetViewProjection() * transform.GetModel();
 	glUniformMatrix4fv(uniforms[U_TRANSFORM], 1, GLU_FALSE, &mvp[0][0]);
+	
+	glm::vec3 light = glm::vec3(0.5f, 0.5f, 0.5f);
+	glm::vec3 lightPosViewSpace = (mvp * glm::vec4(light, 1.0f));
+	//glm::mat4 mv = camera.GetViewProjection();
+
+	GLfloat lightPos[] = { lightPosViewSpace.x, lightPosViewSpace.y, lightPosViewSpace.z };
+	glUniform3fv(uniforms[U_LIGHTING], 1, lightPos);
+	
+	GLenum error = glGetError();
+
+	if (error != GL_NO_ERROR)
+	{
+		std::cout << "Error setting uniform value: " << error << std::endl;
+	}
+
 	/*glm::mat4 model = transform.GetModelMatrix();
 	glUniformMatrix4fv(uniforms[TRANSFORM_U], 1, GLU_FALSE, &model[0][0]);*/
 }

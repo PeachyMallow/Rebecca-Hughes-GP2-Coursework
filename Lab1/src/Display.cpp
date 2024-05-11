@@ -111,7 +111,7 @@ void Display::InitDisplay() // called in MainGame.cpp
 	glEnable(GL_CULL_FACE); // don't draw faces that are not pointing at the camera
 
 	// set background colour - red, green, blue, alpha
-	glClearColor(0.0f, 1.0f, 1.0f, 1.0f);
+	glClearColor(0.0f, 1.0f, 1.0f, 1.0f);//                                             MAKE A VARIABLE IF USED ELSEWHERE I.E., FOG FRAG SHADER
 }
 
 void Display::SwapBuffer() // called in MainGame.cpp

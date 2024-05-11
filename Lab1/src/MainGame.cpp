@@ -12,7 +12,8 @@ MainGame::MainGame() : _gameDisplay(1024, 768, "Game Window"), _gameState(GameSt
 	//Mesh newMesh; // change name?
 	//Camera camera;
 
-//	//_gameState = static_cast<GameState>(GameState::PLAY);
+//	//_gameState = static_cast<GameState>(GameState::PLAY); // IF USING MOVE TO SEPARATE FUNC? DO WE EVEN NEED GAMESTATE?
+// 
 //	_gameState = GameState::PLAY;
 //
 //	//Display* _backDisplay = new Display(1024, 768, "Labs"); // will need to delete at some point
@@ -25,7 +26,7 @@ MainGame::~MainGame()
 
 void MainGame::Run()
 {
-	this->InitSystems(); // once this has been initialised, does it need to keep getting initialised?
+	this->InitSystems(); // only runs once
 	this->GameLoop();
 }
 
@@ -45,8 +46,9 @@ void MainGame::InitSystems()
 	texture3.LoadTexture("..\\res\\PumpkinTex.png");
 
 	// shader
-	shader.SetUp("..\\res\\basicShader");
-	shader.SetUp("..\\res\\toonShader");
+	//basicShader.SetUp("..\\res\\basicShader");
+	basicShader.SetUp("..\\res\\toonShader");
+	//basicShader.SetUp("..\\res\\fogShader");
 	
 
 	//shader2.SetUp("..\\res\\basicShader");
@@ -96,17 +98,22 @@ void MainGame::DrawGame()
 
 	// if pos reaches edge of window then turn back
 	
-	//model 1 - frog
-	transform1.SetPos(glm::vec3(-counter + 4.0f, 0.0f, 3.0f));
+	transform1.SetPos(glm::vec3(0.0f, 0.0f, sinf(counter) * 4.0f));
 	transform1.SetRot(glm::vec3(0.0f, counter * 1.0f, 0.0f));
 	transform1.SetScale(glm::vec3(2.0f, 2.0f, 2.0f));
+	
+	//model 1 - frog
+	//orignal transform
+	/*transform1.SetPos(glm::vec3(-counter + 4.0f, 0.0f, 3.0f));
+	transform1.SetRot(glm::vec3(0.0f, counter * 1.0f, 0.0f));
+	transform1.SetScale(glm::vec3(2.0f, 2.0f, 2.0f));*/
 
 	/*transform.SetPos(glm::vec3(sinf(counter), 0.0, 0.0));
 	transform.SetRot(glm::vec3(0.0, 0.0, counter * 5));
 	transform.SetScale(glm::vec3(sinf(counter), sinf(counter), sinf(counter)));*/
 
-	shader.Bind();
-	shader.Update(transform1, myCamera);
+	basicShader.Bind();
+	basicShader.Update(transform1, myCamera);
 	texture.Bind(0);
 	mesh1.Draw(); // model 1
 
@@ -115,8 +122,8 @@ void MainGame::DrawGame()
 	transform2.SetRot(glm::vec3(0.0f, -counter * 1.0f, 0.0f));
 	transform2.SetScale(glm::vec3(0.5f, 0.5f, 0.5f));
 
-	shader.Bind();
-	shader.Update(transform2, myCamera);
+	basicShader.Bind();
+	basicShader.Update(transform2, myCamera);
 	texture2.Bind(0);
 	mesh2.Draw(); // model 2
 
@@ -126,12 +133,12 @@ void MainGame::DrawGame()
 	transform3.SetRot(glm::vec3(0.0f, counter * 1.0f, 0.0f));
 	transform3.SetScale(glm::vec3(0.75f, 0.75f, 0.75f));
 
-	shader.Bind();
-	shader.Update(transform3, myCamera);
+	basicShader.Bind();
+	basicShader.Update(transform3, myCamera);
 	texture3.Bind(0);
 	mesh3.Draw(); // model 2
 
-	counter = counter + 0.001f;
+	counter = counter + 0.005f;
 
 	_gameDisplay.SwapBuffer();
 
