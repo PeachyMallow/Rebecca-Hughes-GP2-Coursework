@@ -45,8 +45,9 @@ void MainGame::InitSystems()
 	texture3.LoadTexture("..\\res\\PumpkinTex.png");
 
 	// shader
+	shader.SetUp("..\\res\\basicShader");
 	shader.SetUp("..\\res\\toonShader");
-	//shader.SetUp("..\\res\\basicShader");
+	
 
 	//shader2.SetUp("..\\res\\basicShader");
 	//shader3.SetUp("..\\res\\shader");
@@ -130,7 +131,7 @@ void MainGame::DrawGame()
 	texture3.Bind(0);
 	mesh3.Draw(); // model 2
 
-	counter = counter + 0.005f;
+	counter = counter + 0.001f;
 
 	_gameDisplay.SwapBuffer();
 
