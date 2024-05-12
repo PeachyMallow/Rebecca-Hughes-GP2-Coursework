@@ -96,6 +96,7 @@
     <ClInclude Include="include\MainGame.h" />
     <ClInclude Include="include\Mesh.h" />
     <ClInclude Include="include\obj_loader.h" />
+    <ClInclude Include="include\ResourceManager.h" />
     <ClInclude Include="include\Shader.h" />
     <ClInclude Include="include\stb_image.h" />
     <ClInclude Include="include\Texture.h" />

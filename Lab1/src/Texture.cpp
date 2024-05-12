@@ -61,7 +61,7 @@ void Texture::LoadTexture(const std::string& fileName)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT); //height
 
 	//linear (interpolation) filtering for
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR); //minification (texture takes up fewer pixels than set resolution)
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR); // mipmap to prevent texture shimmering artifacts when textured model is far from the camera
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR); //magnification (texture takes up more pixels than set resolution)
 
 	//(tell GPU how to interpret texture data, 
@@ -71,6 +71,7 @@ void Texture::LoadTexture(const std::string& fileName)
 	// input format (format of the data being sent to GPU), 
 	// texture data type, our image data)
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, imageData);
+	glGenerateMipmap(GL_TEXTURE_2D);
 
 	stbi_image_free(imageData); //delete data from CPU
 }

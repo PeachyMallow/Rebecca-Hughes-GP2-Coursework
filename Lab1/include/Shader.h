@@ -6,6 +6,7 @@
 
 #include <iostream> // needed?
 #include <fstream> // needed?
+#include <unordered_map>
 
 #include <Camera.h>
 #include "Transform.h"
@@ -29,6 +30,7 @@ class Shader
 	GLuint program; // track the shader program
 	GLuint shaders[NUM_SHADERS]; // array of shaders
 	GLuint uniforms[NUM_UNIFORMS]; //no of uniform variables
+	std::unordered_map<std::string, GLint> u_locations;
 
 public: 
 	Shader() : program(0), shaders{ NUM_SHADERS }, uniforms{ NUM_UNIFORMS } {};
@@ -45,5 +47,6 @@ public:
 	GLuint CreateShader(const std::string& text, GLuint shaderType);
 	//void SetUniform()
 
+	GLint GetUniformLocation(const std::string& name);
 };
 

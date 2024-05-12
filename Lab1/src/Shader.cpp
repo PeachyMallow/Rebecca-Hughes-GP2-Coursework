@@ -92,12 +92,16 @@ void Shader::Bind()
 {
 	glUseProgram(program);
 
-	uniforms[U_LIGHTING] = glGetUniformLocation(program, "lighting");
+	// commented out to work on fog
+	// ---------------------------
+	//uniforms[U_LIGHTING] = glGetUniformLocation(program, "lighting");
 
-	if (uniforms[U_LIGHTING] == -1) {
-		// Handle the case where the uniform was not found in the shader program
-		std::cout << "Uniform 'lighting' not found in shader program" << std::endl;
-	}
+	//if (uniforms[U_LIGHTING] == -1) {
+	//	// Handle the case where the uniform was not found in the shader program
+	//	std::cout << "Uniform 'lighting' not found in shader program" << std::endl;
+	//}
+	// ---------------------------
+
 
 	//GLfloat lightPos[] = { 0.5f, 0.5f, 0.5f };
 
@@ -124,19 +128,22 @@ void Shader::Update(const Transform& transform, const Camera& camera)
 	glm::mat4 mvp = camera.GetViewProjection() * transform.GetModel();
 	glUniformMatrix4fv(uniforms[U_TRANSFORM], 1, GLU_FALSE, &mvp[0][0]);
 	
-	glm::vec3 light = glm::vec3(0.5f, 0.5f, 0.5f);
-	glm::vec3 lightPosViewSpace = (mvp * glm::vec4(light, 1.0f));
-	//glm::mat4 mv = camera.GetViewProjection();
+	// commented out to work on fog
+	// ---------------------------
+	//glm::vec3 light = glm::vec3(0.5f, 0.5f, 0.5f);
+	//glm::vec3 lightPosViewSpace = (mvp * glm::vec4(light, 1.0f));
+	////glm::mat4 mv = camera.GetViewProjection();
 
-	GLfloat lightPos[] = { lightPosViewSpace.x, lightPosViewSpace.y, lightPosViewSpace.z };
-	glUniform3fv(uniforms[U_LIGHTING], 1, lightPos);
-	
-	GLenum error = glGetError();
+	//GLfloat lightPos[] = { lightPosViewSpace.x, lightPosViewSpace.y, lightPosViewSpace.z };
+	//glUniform3fv(uniforms[U_LIGHTING], 1, lightPos);
+	//
+	//GLenum error = glGetError();
 
-	if (error != GL_NO_ERROR)
-	{
-		std::cout << "Error setting uniform value: " << error << std::endl;
-	}
+	//if (error != GL_NO_ERROR)
+	//{
+	//	std::cout << "Error setting uniform value: " << error << std::endl;
+	//}
+	// ---------------------------
 
 	/*glm::mat4 model = transform.GetModelMatrix();
 	glUniformMatrix4fv(uniforms[TRANSFORM_U], 1, GLU_FALSE, &model[0][0]);*/
@@ -218,5 +225,23 @@ GLuint Shader::CreateShader(const std::string& shaderSrc, GLuint shaderType)
 	CheckShaderError(shaderID, GL_COMPILE_STATUS, false, "Error compiling shader!"); //check for compile error
 
 	return shaderID;
+}
+
+// checks uniform locations hashmap to see if uniform location has 
+// already been retrieved to prevent multiple calls to the GPU
+GLint Shader::GetUniformLocation(const std::string& name)
+{
+	//std::string locations = u_locations.find(name);
+
+	if(u_locations.find(name) != u_locations.end())
+	{
+		return u_locations[name];
+	}
+
+	GLint location = glGetUniformLocation(program, name.c_str());
+	u_locations[name] = location;
+	return location;
+
+
 }
 
