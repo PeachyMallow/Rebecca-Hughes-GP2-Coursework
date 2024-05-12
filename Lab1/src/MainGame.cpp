@@ -46,9 +46,10 @@ void MainGame::InitSystems()
 	texture3.LoadTexture("..\\res\\PumpkinTex.png");
 
 	// shader
-	basicShader.SetUp("..\\res\\basicShader");
-	//basicShader.SetUp("..\\res\\toonShader");
-	//basicShader.SetUp("..\\res\\fogShader");
+	basicShader.Initialise("fogShader");
+	basicShader.Initialise("basicShader");
+	basicShader.Initialise("toonShader");
+	
 	
 
 	//shader2.SetUp("..\\res\\basicShader");

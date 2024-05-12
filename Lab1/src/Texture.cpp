@@ -84,3 +84,10 @@ void Texture::Bind(unsigned int unit)
 	glBindTexture(GL_TEXTURE_2D, textureHandler); //(texture type, texture to bind to unit)
 
 }
+
+//GLint Texture::GetTextureLocation(const int texName)
+//{
+//	//checks if texture exists
+//	//true - return texture
+//	//false - create new texture
+//}

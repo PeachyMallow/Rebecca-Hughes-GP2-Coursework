@@ -29,26 +29,42 @@
 
 Shader::~Shader()
 {
-	for (GLuint& shader : shaders)
+	for (auto itr = m_shaders.begin(); itr != m_shaders.end(); itr++) 
 	{
-		glDetachShader(program, shader);
-		glDeleteShader(shader);
+		for (GLuint& shader : itr->second._shaders)
+		{ 
+			glDetachShader(program, shader);
+			glDeleteShader(shader);
+		}
 	}
 
 	glDeleteProgram(program);
 }
 
-void Shader::SetUp(const std::string& filename)
+
+
+void Shader::Initialise(const std::string& filename)
 {
-	program = glCreateProgram();
+	program = glCreateProgram(); // maybe move to constructor once hash tables are sorted
 
-	shaders[0] = CreateShader(LoadShader(filename + ".vert"), GL_VERTEX_SHADER);
-	shaders[1] = CreateShader(LoadShader(filename + ".frag"), GL_FRAGMENT_SHADER);
+	m_shaders[filename] = 
+		S_VertAndFrag {{CreateShader(LoadShader("..\\res\\" + filename + ".vert"), GL_VERTEX_SHADER),
+						CreateShader(LoadShader("..\\res\\" + filename + ".frag"), GL_FRAGMENT_SHADER)}};
 
-	for (GLuint& shader : shaders)
+	for (int i = 0; i <= m_shaders.size(); i++)
+	{
+		glAttachShader(program, m_shaders[filename]._shaders[i]);
+	}
+
+	//pre hash table
+	//-------------
+	/*shaders[0] = CreateShader(LoadShader("..\\res\\" + filename + ".vert"), GL_VERTEX_SHADER);
+	//shaders[1] = CreateShader(LoadShader("..\\res\\" + filename + ".frag"), GL_FRAGMENT_SHADER);
+	//for (GLuint& shader : shaders)
 	{
 		glAttachShader(program, shader);
-	}
+	}*/
+	//-------------
 
 	glBindAttribLocation(program, 0, "vertexPos");
 	glBindAttribLocation(program, 1, "vertexTexCoord");
@@ -61,7 +77,11 @@ void Shader::SetUp(const std::string& filename)
 	glValidateProgram(program); // check the entire program is valid
 	CheckShaderError(program, GL_VALIDATE_STATUS, true, "Error: Shader program not valid");
 
+
 	uniforms[U_TRANSFORM] = glGetUniformLocation(program, "transform");
+	
+	//m_shaders[filename] = 
+	
 	//uniforms[U_LIGHTING] = glGetUniformLocation(program, "lighting");
 	//
 	//if (uniforms[U_LIGHTING] == -1) {
@@ -226,6 +246,25 @@ GLuint Shader::CreateShader(const std::string& shaderSrc, GLuint shaderType)
 
 	return shaderID;
 }
+
+//GLint Shader::GetShader(const std::string& shaderName)
+//{
+//	//std::string locations = u_locations.find(name);
+//	//checks if shader exists
+//	//true - return shader
+//	//false - create new shader
+//	if (m_shaders.find(shaderName) != m_shaders.end())
+//	{
+//		return m_shaders[shaderName];
+//	}
+//
+//
+//	/*GLint location = glGetUniformLocation(program, m_shaders.c_str());
+//	m_shaders[name] = location;
+//	return location;*/
+//
+//
+//}
 
 // checks uniform locations hashmap to see if uniform location has 
 // already been retrieved to prevent multiple calls to the GPU

@@ -18,11 +18,14 @@ enum
 };
 
 // textures
-enum
-{
-	FROG_TEX,
-	BEE_TEX,
-	PUMPKIN_TEX
-};
+//enum
+//{
+//	FROG_TEX,
+//	BEE_TEX,
+//	PUMPKIN_TEX
+//};
 
-// MAYBE sounds enum
+class ResourceManager
+{
+	void Initialise();
+};
