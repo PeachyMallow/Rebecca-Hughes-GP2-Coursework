@@ -20,7 +20,7 @@ void main()
 
 	vec4 texture = texture2D(diffuse, v_texCoord); // model's texture
 
-	vec4 lightColour = vec4(1.0, 1.0, 1.0, 1.0);
+	vec4 lightColour = vec4(1.0, 0.0, 0.0, 1.0);
 
 	vec4 colour = mix( lightColour, fogColour, 1 - fogFactor); // interpolate between model's texture & fogColour dependant on objects distance from camera
 

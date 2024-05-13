@@ -41,10 +41,16 @@ Shader::~Shader()
 	glDeleteProgram(program);
 }
 
-
-
-void Shader::Initialise(const std::string& filename)
+void Shader::InitProgram(const std::string& filename)
 {
+	m_programs[filename] = glCreateProgram();
+	//program = glCreateProgram();
+}
+
+void Shader::InitShaders(const std::string& filename)
+{
+	InitProgram(filename);
+	//m_programs[filename] = glCreateProgram();
 	program = glCreateProgram(); // maybe move to constructor once hash tables are sorted
 
 	m_shaders[filename] = 
@@ -70,17 +76,15 @@ void Shader::Initialise(const std::string& filename)
 	glBindAttribLocation(program, 1, "vertexTexCoord");
 	glBindAttribLocation(program, 2, "vertexNormals");
 
-
 	glLinkProgram(program); // creates exe that will run on the GPU shaders
 	CheckShaderError(program, GL_LINK_STATUS, true, "Error: Shader program linking failed");
 
 	glValidateProgram(program); // check the entire program is valid
 	CheckShaderError(program, GL_VALIDATE_STATUS, true, "Error: Shader program not valid");
 
-
 	uniforms[U_TRANSFORM] = glGetUniformLocation(program, "transform");
 	
-	//m_shaders[filename] = 
+	//std::cout << program << std::endl;
 	
 	//uniforms[U_LIGHTING] = glGetUniformLocation(program, "lighting");
 	//
@@ -230,7 +234,7 @@ GLuint Shader::CreateShader(const std::string& shaderSrc, GLuint shaderType)
 {
 	GLuint shaderID = glCreateShader(shaderType); //create shader based on specified type
 
-	if (shaderID == 0) //if == 0 shader no created
+	if (shaderID == 0) //if == 0 shader not created
 		std::cerr << "Error shader type creation failed " << shaderType << std::endl;
 
 	const GLchar* source[1] = { nullptr }; //convert strings into list of c-strings    DEPENDANT ON FUTURE WORK COULD MAKE NOT ARRAYS if so make string source in glShaderSource a ref
@@ -265,6 +269,13 @@ GLuint Shader::CreateShader(const std::string& shaderSrc, GLuint shaderType)
 //
 //
 //}
+
+// activate all the shaders in m_shaders hash table
+void Shader::ActivateShaders()
+{
+
+}
+
 
 // checks uniform locations hashmap to see if uniform location has 
 // already been retrieved to prevent multiple calls to the GPU

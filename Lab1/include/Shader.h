@@ -54,8 +54,8 @@ class Shader
 
 	std::unordered_map<std::string, GLint> u_locations;
 
-	std::unordered_map<std::string, S_VertAndFrag> m_shaders;
-
+	std::unordered_map<std::string, S_VertAndFrag> m_shaders; // change s_VertandFrag to just gluint array? 
+	std::unordered_map<std::string, GLuint> m_programs;
 
 public: 
 	Shader() : /*shaders{ NUM_SHADERS },*/ uniforms{ NUM_UNIFORMS }
@@ -65,7 +65,8 @@ public:
 	~Shader();
 
 	//void Init();
-	void Initialise(const std::string& filename);
+	void InitProgram(const std::string& filename);
+	void InitShaders(const std::string& filename);
 	void Bind(); // set GPU to use our shaders
 	void Update(const Transform& transform, const Camera& camera);
 
@@ -75,6 +76,8 @@ public:
 	//void SetUniform()
 
 	GLint GetShader(const std::string& shaderName);
+
+	void ActivateShaders();
 
 	GLint GetUniformLocation(const std::string& name);
 };
