@@ -50,7 +50,7 @@ void Shader::InitProgram(const std::string& filename)
 void Shader::InitShaders(const std::string& filename)
 {
 	InitProgram(filename);
-	//m_programs[filename] = glCreateProgram();
+
 	program = glCreateProgram(); // maybe move to constructor once hash tables are sorted
 
 	m_shaders[filename] = 
@@ -149,8 +149,8 @@ void Shader::Bind()
 
 void Shader::Update(const Transform& transform, const Camera& camera)
 {
-	glm::mat4 mvp = camera.GetViewProjection() * transform.GetModel();
-	glUniformMatrix4fv(uniforms[U_TRANSFORM], 1, GLU_FALSE, &mvp[0][0]);
+	mvp = camera.GetViewProjection() * transform.GetModel();
+	glUniformMatrix4fv(uniforms[U_TRANSFORM], 1, GLU_FALSE, &mvp[0][0]); // update transform uniform
 	
 	// commented out to work on fog
 	// ---------------------------

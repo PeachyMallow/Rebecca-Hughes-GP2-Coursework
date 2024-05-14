@@ -2,9 +2,9 @@
 
 //global variables
 unsigned int indices[] = { 0, 1, 2 };
-Transform transform1;
-Transform transform2;
-Transform transform3;
+Transform transform[3];
+//Transform transform2;
+//Transform transform3;
 
 
 MainGame::MainGame() : _gameDisplay(1024, 768, "Game Window"), _gameState(GameState::PLAY), counter(0)/*, mesh(), mesh1(), mesh2(), myCamera()*/
@@ -34,39 +34,31 @@ void MainGame::InitSystems()
 {
 	_gameDisplay.InitDisplay();
 
-	mesh1.LoadModel("..\\res\\Frog.obj");
-
-	mesh2.LoadModel("..\\res\\Bee.obj");
-
-	mesh3.LoadModel("..\\res\\Pumpkin.obj");
+	m_mesh[FROG].LoadModel("Frog");
+	m_mesh[BEE].LoadModel("Bee");
+	m_mesh[PUMPKIN].LoadModel("Pumpkin");
 
 	// texture
-	texture.LoadTexture("..\\res\\FrogTex.png");
-	texture2.LoadTexture("..\\res\\BeeTex.png");
-	texture3.LoadTexture("..\\res\\PumpkinTex.png");
+	texture[FROG].LoadTexture("FrogTex");
+	texture[BEE].LoadTexture("BeeTex");
+	texture[PUMPKIN].LoadTexture("PumpkinTex");
 
 	//m_shader.InitProgram();
 
-	// shader
-	
-	
-	m_shader.InitShaders("fogShader");
-	m_shader.InitShaders("toonShader");
-	m_shader.InitShaders("basicShader");
+	// shaders
+	m_shader[FROG].InitShaders("fogShader");
+	m_shader[BEE].InitShaders("basicShader");
+	m_shader[PUMPKIN].InitShaders("toonShader");
 	
 	/*basicShader.Initialise("fogShader");
 	basicShader.Initialise("basicShader");
 	basicShader.Initialise("toonShader");
 	*/
-	
+	//fogShader.Bind();
 
-	//shader2.SetUp("..\\res\\basicShader");
-	//shader3.SetUp("..\\res\\shader");
-
-	myCamera.initCamera(glm::vec3(0, 0, -5), 70.0f, (float)_gameDisplay.GetWidth() / _gameDisplay.GetHeight(), 0.01f, 1000.0f);
+	m_Camera.initCamera(glm::vec3(0, 0, -5), 70.0f, (float)_gameDisplay.GetWidth() / _gameDisplay.GetHeight(), 0.01f, 1000.0f);
 
 	//counter
-	
 }
 
 void MainGame::GameLoop()
@@ -93,96 +85,49 @@ void MainGame::ProcessInput()
 	}
 }
 
-// will be updating to load from file
 void MainGame::DrawGame()
 {
 	_gameDisplay.ClearDisplay(0.0f, 0.0f, 0.0f, 1.0f);
 	
 	// check for collision here?
-	if (Collided(transform1.GetPos(), mesh1.GetRadius(), transform2.GetPos(), mesh2.GetRadius()))
-	{	
-		//std::cout << "Model 1 radius: " << mesh1.GetRadius() << std::endl;
-		//std::cout << "Model 2 radius: " << mesh2.GetRadius() << std::endl;
-	}
+	//if (Collided(transform1.GetPos(), mesh1.GetRadius(), transform2.GetPos(), mesh2.GetRadius()))
+	//{	
+	//	//std::cout << "Model 1 radius: " << mesh1.GetRadius() << std::endl;
+	//	//std::cout << "Model 2 radius: " << mesh2.GetRadius() << std::endl;
+	//}
 
 	// if pos reaches edge of window then turn back
 	
-	transform1.SetPos(glm::vec3(0.0f, 0.0f, sinf(counter) * 4.0f));
-	transform1.SetRot(glm::vec3(0.0f, counter * 1.0f, 0.0f));
-	transform1.SetScale(glm::vec3(2.0f, 2.0f, 2.0f));
-	
-	//model 1 - frog
-	//orignal transform
-	/*transform1.SetPos(glm::vec3(-counter + 4.0f, 0.0f, 3.0f));
-	transform1.SetRot(glm::vec3(0.0f, counter * 1.0f, 0.0f));
-	transform1.SetScale(glm::vec3(2.0f, 2.0f, 2.0f));*/
-
-	/*transform.SetPos(glm::vec3(sinf(counter), 0.0, 0.0));
-	transform.SetRot(glm::vec3(0.0, 0.0, counter * 5));
-	transform.SetScale(glm::vec3(sinf(counter), sinf(counter), sinf(counter)));*/
-
-	/*basicShader.Bind();
-	basicShader.Update(transform1, myCamera);*/
-	
-	m_shader.Bind();
-	m_shader.Update(transform1, myCamera);
-	texture.Bind(0);
-	mesh1.Draw(); // model 1
-
-	//model 2 - bee
-	transform2.SetPos(glm::vec3(counter - 4.0f, 0.0f, 3.0f));
-	transform2.SetRot(glm::vec3(0.0f, -counter * 1.0f, 0.0f));
-	transform2.SetScale(glm::vec3(0.5f, 0.5f, 0.5f));
-
-	//m_shader.Bind();
-	m_shader.Update(transform2, myCamera);
-	texture2.Bind(0);
-	mesh2.Draw(); // model 2
-
-
-	//model 2 - pumpkin
-	transform3.SetPos(glm::vec3(counter - 0.0f, 1.0f, 3.0f));
-	transform3.SetRot(glm::vec3(0.0f, counter * 1.0f, 0.0f));
-	transform3.SetScale(glm::vec3(0.75f, 0.75f, 0.75f));
-
-	//m_shader.Bind();
-	m_shader.Update(transform3, myCamera);
-	texture3.Bind(0);
-	mesh3.Draw(); // model 2
+	for (int i = 1; i < NUM_OBJECTS; i++)
+	{
+		SetTransforms(i);
+		SetShader(i);
+		m_shader[i].Update(transform[i], m_Camera);
+		texture[i].Bind(0);
+		m_mesh[i].Draw();
+	}
+	////model 1 - frog
+	//SetTransforms(FROG);
+	//SetShader(FOG);
+	//m_shader[FROG].Update(transform[FROG], m_Camera);
+	//texture[FROG].Bind(0);
+	//m_mesh[FROG].Draw();
+	////model 2 - bee
+	//SetTransforms(BEE);
+	//SetShader(BASIC);
+	//m_shader[BEE].Update(transform[BEE], m_Camera);
+	//texture[BEE].Bind(0);
+	//m_mesh[BEE].Draw();
+	////model 2 - pumpkin
+	//SetTransforms(PUMPKIN);
+	//SetShader(TOON);
+	//m_shader[PUMPKIN].Update(transform[PUMPKIN], m_Camera);
+	//texture[PUMPKIN].Bind(0);
+	//m_mesh[PUMPKIN].Draw();
 
 	counter = counter + 0.005f;
 
 	_gameDisplay.SwapBuffer();
-
-
-	////access number of elements in array by dividing the size of the array by the size of the data type it contains
-	////sizeof() returns the size of a type in bytes
-	//Mesh mesh(vertices, sizeof(vertices) / sizeof(vertices[0])); //create a mesh object 
-	//Shader shader("..\\res\\shader"); //create a shader
-	//Texture texture("..\\res\\bricks.jpg"); //load texture
-	//
-	//Transform transform; 
-	//transform.SetPos(glm::vec3(sinf(counter), 0.0, 0.0));
-	//transform.SetRot(glm::vec3(0.0, 0.0, -counter * 5)); 
-	//transform.SetScale(glm::vec3(sinf(counter), sinf(counter), sinf(counter)));
-	//
-	//shader.Bind(); //bind the shader
-	//shader.Update(transform); 
-	//texture.Bind(0);
-	//mesh.Draw(); //draw the mesh
-	//Mesh mesh1(vertices1, sizeof(vertices1) / sizeof(vertices1[0])); //create a mesh object 
-	//Shader shader1("..\\res\\shader"); //create a shader
-	//Texture texture1("..\\res\\water.jpg"); //load texture
-	//Transform transform1;
-	//transform1.SetPos(glm::vec3(sinf(-counter), 0.0, 0.0));
-	//transform1.SetRot(glm::vec3(0.0, 0.0, counter * 5));
-	//transform1.SetScale(glm::vec3(sinf(counter), sinf(counter), sinf(counter)));
-	//shader1.Bind();
-	//shader1.Update(transform1);
-	//texture1.Bind(1);
-	//mesh1.Draw();
-	//counter = counter + 0.01f;
-	//_gameDisplay.SwapBuffer(); // swap buffers
 }
 
 // collision detection               MIGHT NOT NEED ONE OF THE AXIS?
@@ -208,3 +153,67 @@ bool MainGame::Collided(glm::vec3 pos1, float radius1, glm::vec3 pos2, float rad
 	//std::cout << "Objects are not colliding" << std::endl;
 	return false;
 }
+
+void MainGame::SetTransforms(int objectType)
+{
+	switch (objectType)
+	{
+	case FROG:
+		transform[FROG].SetPos(glm::vec3(0.0f, 0.0f, sinf(counter) * 4.0f));
+		transform[FROG].SetRot(glm::vec3(0.0f, counter * 1.0f, 0.0f));
+		transform[FROG].SetScale(glm::vec3(2.0f, 2.0f, 2.0f));
+		break;
+
+	case BEE:
+		transform[BEE].SetPos(glm::vec3(counter - 4.0f, 0.0f, 3.0f));
+		transform[BEE].SetRot(glm::vec3(0.0f, -counter * 1.0f, 0.0f));
+		transform[BEE].SetScale(glm::vec3(0.5f, 0.5f, 0.5f));
+		break;
+
+	case PUMPKIN:
+		transform[PUMPKIN].SetPos(glm::vec3(counter - 0.0f, 1.0f, 3.0f));
+		transform[PUMPKIN].SetRot(glm::vec3(0.0f, counter * 1.0f, 0.0f));
+		transform[PUMPKIN].SetScale(glm::vec3(0.75f, 0.75f, 0.75f));
+		break;
+	}
+}
+
+void MainGame::SetShader(int shaderType)
+{
+	switch (shaderType)
+	{
+	case FOG:
+		m_shader[FOG].Bind();
+		break;
+
+	case BASIC:
+		m_shader[BASIC].Bind();
+		break;
+
+	case TOON:
+		m_shader[TOON].Bind();
+		break;
+	}
+}
+
+void MainGame::SetTexture()
+{
+
+}
+
+
+////access number of elements in array by dividing the size of the array by the size of the data type it contains
+////sizeof() returns the size of a type in bytes
+//Mesh mesh(vertices, sizeof(vertices) / sizeof(vertices[0])); //create a mesh object 
+//Shader shader("..\\res\\shader"); //create a shader
+//Texture texture("..\\res\\bricks.jpg"); //load texture
+//
+//Transform transform; 
+//transform.SetPos(glm::vec3(sinf(counter), 0.0, 0.0));
+//transform.SetRot(glm::vec3(0.0, 0.0, -counter * 5)); 
+//transform.SetScale(glm::vec3(sinf(counter), sinf(counter), sinf(counter)));
+//
+//shader.Bind(); //bind the shader
+//shader.Update(transform); 
+//texture.Bind(0);
+//mesh.Draw(); //draw the mesh

@@ -42,7 +42,6 @@ class Shader
 	enum
 	{
 		U_TRANSFORM, 
-		test,
 		U_LIGHTING,
 		NUM_UNIFORMS
 	};
@@ -51,11 +50,16 @@ class Shader
 	//GLuint shaders[NUM_SHADERS]; // array of shaders
 	GLuint uniforms[NUM_UNIFORMS]; //no of uniform variables
 
-
+	glm::mat4 mvp;
 	std::unordered_map<std::string, GLint> u_locations;
 
 	std::unordered_map<std::string, S_VertAndFrag> m_shaders; // change s_VertandFrag to just gluint array? 
 	std::unordered_map<std::string, GLuint> m_programs;
+
+	GLuint basicShader = 1;
+	GLuint toonShader = 2;
+	GLuint fogShader = 3;
+
 
 public: 
 	Shader() : /*shaders{ NUM_SHADERS },*/ uniforms{ NUM_UNIFORMS }
