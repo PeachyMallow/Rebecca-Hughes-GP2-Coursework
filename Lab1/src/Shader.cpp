@@ -288,10 +288,10 @@ GLint Shader::GetUniformLocation(const std::string& name)
 		return u_locations[name];
 	}
 
+	
 	GLint location = glGetUniformLocation(program, name.c_str());
 	u_locations[name] = location;
 	return location;
-
 
 }
 

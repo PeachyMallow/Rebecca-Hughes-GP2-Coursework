@@ -46,15 +46,11 @@ void MainGame::InitSystems()
 	//m_shader.InitProgram();
 
 	// shaders
-	m_shader[FROG].InitShaders("fogShader");
+	m_shader[FROG].InitShaders("toonShader");
 	m_shader[BEE].InitShaders("basicShader");
-	m_shader[PUMPKIN].InitShaders("toonShader");
+	//m_shader[PUMPKIN].InitShaders("toonShader");
+	m_shader[PUMPKIN].InitShaders("RimLighting");
 	
-	/*basicShader.Initialise("fogShader");
-	basicShader.Initialise("basicShader");
-	basicShader.Initialise("toonShader");
-	*/
-	//fogShader.Bind();
 
 	m_Camera.initCamera(glm::vec3(0, 0, -5), 70.0f, (float)_gameDisplay.GetWidth() / _gameDisplay.GetHeight(), 0.01f, 1000.0f);
 
@@ -74,16 +70,34 @@ void MainGame::ProcessInput()
 {
 	SDL_Event evnt; // create SDL event
 
+	const Uint8* keyStates = SDL_GetKeyboardState(NULL); // video
+	std::string inputText;// video
+
 	while (SDL_PollEvent(&evnt) /* != 0 */) //SDL_PollEvent - Event Loop (a queue)
 	{
-		switch (evnt.type)
+		if (evnt.type == SDL_QUIT)
 		{
-		case SDL_QUIT:
 			_gameState = GameState::EXIT;
-			break;
+		}
+
+		if (keyStates[SDL_SCANCODE_W])// video
+		{
+			std::cout << "W Pressed" << std::endl;
 		}
 	}
+
+	SDL_GetMouseState(&mouseX, &mouseY);
+
+	//std::cout << "mouse x: " << mouseX << "mouse y: " << mouseY << std::endl;
 }
+
+//while (SDL_PollEvent(&evnt) /* != 0 */) //SDL_PollEvent - Event Loop (a queue)
+//{
+//	switch (evnt.type)
+//	{
+//	case SDL_QUIT:
+//		_gameState = GameState::EXIT;
+//		break;
 
 void MainGame::DrawGame()
 {
@@ -98,7 +112,7 @@ void MainGame::DrawGame()
 
 	// if pos reaches edge of window then turn back
 	
-	for (int i = 1; i < NUM_OBJECTS; i++)
+	for (int i = 0; i < NUM_OBJECTS; i++)
 	{
 		SetTransforms(i);
 		SetShader(i);
@@ -159,9 +173,14 @@ void MainGame::SetTransforms(int objectType)
 	switch (objectType)
 	{
 	case FROG:
-		transform[FROG].SetPos(glm::vec3(0.0f, 0.0f, sinf(counter) * 4.0f));
+		/*transform[FROG].SetPos(glm::vec3(0.0f, 0.0f, sinf(counter) * 4.0f));
 		transform[FROG].SetRot(glm::vec3(0.0f, counter * 1.0f, 0.0f));
+		transform[FROG].SetScale(glm::vec3(2.0f, 2.0f, 2.0f));*/
+		
+		transform[FROG].SetPos(glm::vec3(2.0f, 0.0f, 1.0f));
+		transform[FROG].SetRot(glm::vec3(0.0f, 0.0f /*counter * 1.0f*/, 0.0f));
 		transform[FROG].SetScale(glm::vec3(2.0f, 2.0f, 2.0f));
+
 		break;
 
 	case BEE:
@@ -171,9 +190,15 @@ void MainGame::SetTransforms(int objectType)
 		break;
 
 	case PUMPKIN:
-		transform[PUMPKIN].SetPos(glm::vec3(counter - 0.0f, 1.0f, 3.0f));
-		transform[PUMPKIN].SetRot(glm::vec3(0.0f, counter * 1.0f, 0.0f));
+		//transform[PUMPKIN].SetPos(glm::vec3(/*counter - 0.0f*/ 3.0f, 1.0f, 3.0f));
+		//transform[PUMPKIN].SetRot(glm::vec3(0.0f, 0.0f /*counter * 1.0f*/, 0.0f));
+		//transform[PUMPKIN].SetScale(glm::vec3(0.75f, 0.75f, 0.75f));
+		transform[PUMPKIN].SetPos(glm::vec3(0.0f, 0.0f, sinf(counter) * 3.0f));
+		//transform[PUMPKIN].SetRot(glm::vec3(0.0f, 0.0f, 0.0f)); // still
+		transform[PUMPKIN].SetRot(glm::vec3(0.0f, counter * 1.0f, 0.0f)); // rotate
 		transform[PUMPKIN].SetScale(glm::vec3(0.75f, 0.75f, 0.75f));
+
+
 		break;
 	}
 }

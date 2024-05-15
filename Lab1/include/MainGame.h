@@ -34,6 +34,7 @@ class MainGame
 	Display _gameDisplay/*(1024, 768, const "Labs")*/;
 	GameState _gameState;
 
+	int mouseX, mouseY;
 
 	Mesh m_mesh[NUM_OBJECTS]; // make a vector?
 	/*Mesh mesh1;
@@ -49,6 +50,7 @@ class MainGame
 	/*Shader basicShader;
 	Shader toonShader;
 	Shader fogShader;*/
+
 
 	float counter;
 

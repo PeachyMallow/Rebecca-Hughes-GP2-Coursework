@@ -16,7 +16,7 @@ void main()
 {
 	float dist = abs(v_Pos.z); 	//surface point to the eye position
 	
-	float fogFactor = clamp((maxDist - dist) / (maxDist - minDist), 0.0f, 1.0f); // how much the object should be affected by fog 
+	float fogFactor = clamp((maxDist - dist) / (maxDist - minDist), 0.0f, 1.0f); // how much the object should be affected by fog CHANGE TO SMOOTHSTEP??
 
 	vec4 texture = texture2D(diffuse, v_texCoord); // model's texture
 

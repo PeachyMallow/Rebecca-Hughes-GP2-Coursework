@@ -8,7 +8,7 @@ uniform sampler2D diffuse;
 
 void main()
 {
-	vec3 lightDir = vec3(0.5f, 0.5f, 0.5f);
+	vec3 lightDir = vec3(0.0f, 0.0f, -1.0f);
 
 	vec4 texture = texture2D(diffuse, v_texCoord); // if you enable transparency alpha, then could avoid repitition
 	float intensity = max(dot(normalize(normal), normalize(lightDir)), 0.0);
