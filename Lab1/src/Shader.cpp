@@ -32,24 +32,24 @@ Shader::~Shader()
 	{
 		for (GLuint& shader : itr->second._shaders)
 		{ 
-			glDetachShader(program, shader);
+			glDetachShader(m_program, shader);
 			glDeleteShader(shader);
 		}
 	}
 
-	glDeleteProgram(program);
+	glDeleteProgram(m_program);
 }
 
 void Shader::InitProgram(const std::string& filename)
 {
-	m_programs[filename] = glCreateProgram();
+	m_program = glCreateProgram();
 }
 
 void Shader::InitShaders(const std::string& filename)
 {
 	InitProgram(filename);
 
-	program = glCreateProgram(); // maybe move to constructor once hash tables are sorted
+	m_program = glCreateProgram(); // maybe move to constructor once hash tables are sorted
 
 	m_shaders[filename] = 
 		S_VertAndFrag {{CreateShader(LoadShader("..\\res\\" + filename + ".vert"), GL_VERTEX_SHADER),
@@ -57,7 +57,7 @@ void Shader::InitShaders(const std::string& filename)
 
 	for (unsigned int i = 0; i <= m_shaders.size(); i++)
 	{
-		glAttachShader(program, m_shaders[filename]._shaders[i]);
+		glAttachShader(m_program, m_shaders[filename]._shaders[i]);
 	}
 
 	//pre hash table
@@ -70,15 +70,15 @@ void Shader::InitShaders(const std::string& filename)
 	}*/
 	//-------------
 
-	glBindAttribLocation(program, 0, "vertexPos");
-	glBindAttribLocation(program, 1, "vertexTexCoord");
-	glBindAttribLocation(program, 2, "vertexNormals");
+	glBindAttribLocation(m_program, 0, "vertexPos");
+	glBindAttribLocation(m_program, 1, "vertexTexCoord");
+	glBindAttribLocation(m_program, 2, "vertexNormals");
 
-	glLinkProgram(program); // creates exe that will run on the GPU shaders
-	CheckShaderError(program, GL_LINK_STATUS, true, "Error: Shader program linking failed");
+	glLinkProgram(m_program); // creates exe that will run on the GPU shaders
+	CheckShaderError(m_program, GL_LINK_STATUS, true, "Error: Shader program linking failed");
 
-	glValidateProgram(program); // check the entire program is valid
-	CheckShaderError(program, GL_VALIDATE_STATUS, true, "Error: Shader program not valid");
+	glValidateProgram(m_program); // check the entire program is valid
+	CheckShaderError(m_program, GL_VALIDATE_STATUS, true, "Error: Shader program not valid");
 
 	GetUniformLocation("u_transform");
 	GetUniformLocation("u_lighting");
@@ -86,12 +86,12 @@ void Shader::InitShaders(const std::string& filename)
 
 void Shader::Bind()
 {
-	glUseProgram(program);
+	glUseProgram(m_program);
 }
 
-void Shader::Update(const Transform& transform, const Camera& camera)
+void Shader::Update(const glm::mat4& objTransform, const Camera& camera)
 {
-	mvp = camera.GetViewProjection() * transform.GetModel();
+	mvp = camera.GetViewProjection() * objTransform;
 	glUniformMatrix4fv(u_locations["u_transform"], 1, GLU_FALSE, &mvp[0][0]); // update transform uniform
 	
 	glm::vec4 lightPosMVP = mvp * lightPos;
@@ -216,7 +216,7 @@ GLint Shader::GetUniformLocation(const std::string& name)
 		return u_locations[name];
 	}
 
-	GLint location = glGetUniformLocation(program, name.c_str());
+	GLint location = glGetUniformLocation(m_program, name.c_str());
 
 	u_locations[name] = location;
 

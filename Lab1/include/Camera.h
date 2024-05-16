@@ -7,7 +7,7 @@ struct Camera
 {
 	Camera() {}/*: projection(0), pos(0), forward(0), up(0) {}*/; // need a destructor?
 
-	void initCamera(const glm::vec3& pos, float fov, float aspect, float nearClip, float farClip)
+	void InitCamera(const glm::vec3& pos, float fov, float aspect, float nearClip, float farClip)
 	{
 		this->pos = pos;
 		this->forward = glm::vec3(0.0f, 0.0f, 1.0f);

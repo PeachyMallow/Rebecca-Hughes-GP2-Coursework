@@ -70,7 +70,6 @@ void Mesh::LoadModel(const std::string& fileName)
 {
 	IndexedModel model = OBJModel("..\\res\\" + fileName + ".obj").ToIndexedModel(); // load model from file
 	InitModel(model); // initialise the new model
-
 }
 
 void Mesh::InitModel(const IndexedModel& model)

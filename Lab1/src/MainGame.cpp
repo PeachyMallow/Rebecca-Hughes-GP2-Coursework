@@ -2,12 +2,12 @@
 
 //global variables
 unsigned int indices[] = { 0, 1, 2 };
-Transform transform[3];
+
 //Transform transform2;
 //Transform transform3;
 
 
-MainGame::MainGame() : _gameDisplay(1024, 768, "Game Window"), _gameState(GameState::PLAY), counter(0)/*, mesh(), mesh1(), mesh2(), myCamera()*/
+MainGame::MainGame() : _gameDisplay(1024, 768, "Game Window"), _gameState(GameState::PLAY)/*, counter(0)*//*, mesh(), mesh1(), mesh2(), myCamera()*/
 {
 	//Mesh newMesh; // change name?
 	//Camera camera;
@@ -34,6 +34,27 @@ void MainGame::InitSystems()
 {
 	_gameDisplay.InitDisplay();
 
+	// shaders
+	m_shader[FROG].InitShaders("toonShader");
+	m_shader[BEE].InitShaders("basicShader");
+	//m_shader[PUMPKIN].InitShaders("toonShader");
+	m_shader[PUMPKIN].InitShaders("RimLighting");
+
+	frogGO.InitGameObj("Frog", "FrogTex");
+	beeGO.InitGameObj("Bee", "BeeTex");
+	pumpkinGO.InitGameObj("Pumpkin", "PumpkinTex");
+
+	frogGO.SetTransforms(3.0f, -1.0); // pos x
+	beeGO.SetTransforms(-4.0f, 0.0); // pos x
+	pumpkinGO.SetTransforms(4.0f, 1.0);
+
+	
+
+
+	/*SetTransforms(FROG);
+	SetTransforms(BEE);
+	SetTransforms(PUMPKIN);*/
+	//----
 	m_mesh[FROG].LoadModel("Frog");
 	m_mesh[BEE].LoadModel("Bee");
 	m_mesh[PUMPKIN].LoadModel("Pumpkin");
@@ -42,17 +63,13 @@ void MainGame::InitSystems()
 	texture[FROG].LoadTexture("FrogTex");
 	texture[BEE].LoadTexture("BeeTex");
 	texture[PUMPKIN].LoadTexture("PumpkinTex");
-
+	//----
 	//m_shader.InitProgram();
 
-	// shaders
-	m_shader[FROG].InitShaders("toonShader");
-	m_shader[BEE].InitShaders("basicShader");
-	//m_shader[PUMPKIN].InitShaders("toonShader");
-	m_shader[PUMPKIN].InitShaders("RimLighting");
+	
 	
 
-	m_Camera.initCamera(glm::vec3(0, 0, -5), 70.0f, (float)_gameDisplay.GetWidth() / _gameDisplay.GetHeight(), 0.01f, 1000.0f);
+	m_Camera.InitCamera(glm::vec3(0, 0, -5), 70.0f, (float)_gameDisplay.GetWidth() / _gameDisplay.GetHeight(), 0.01f, 1000.0f);
 	
 	//set lighting uniform here
 	//m_shader[FROG].SetLightingUniform("u_lighting", m_Camera);
@@ -102,7 +119,7 @@ void MainGame::ProcessInput()
 
 void MainGame::DrawGame()
 {
-	_gameDisplay.ClearDisplay(0.0f, 0.0f, 0.0f, 1.0f);
+	_gameDisplay.ClearDisplay(m_sceneBGColour.x, m_sceneBGColour.y, m_sceneBGColour.z, m_sceneBGColour.w);
 	
 	// check for collision here?
 	//if (Collided(transform1.GetPos(), mesh1.GetRadius(), transform2.GetPos(), mesh2.GetRadius()))
@@ -113,15 +130,36 @@ void MainGame::DrawGame()
 
 	// if pos reaches edge of window then turn back
 	
-	for (int i = 0; i < NUM_OBJECTS; i++)
-	{
-		SetTransforms(i);
-		SetShader(i);
-		m_shader[i].Update(transform[i], m_Camera);
-		//m_shader[FROG].SetLightingUniform("u_lighting", m_Camera);
-		texture[i].Bind(0);
-		m_mesh[i].Draw();
-	}
+
+	SetShader(0);
+	m_shader[0].Update(frogGO.GetObjTransform(), m_Camera);
+	m_shader[0].Update(beeGO.GetObjTransform(), m_Camera);
+	m_shader[0].Update(beeGO.GetObjTransform(), m_Camera);
+
+	frogGO.DrawGameObject();
+	//beeGO.DrawGameObject();
+	//pumpkinGO.DrawGameObject();
+
+	frogGO.Move();
+
+//	m_shader[0].Update(transform[i], m_Camera);
+	
+	/*SetTransforms(1);
+	SetShader(1);
+	
+	texture[1].Bind(0);
+	m_mesh[1].Draw();*/
+
+	// for each object to have a different:
+	// shader, texture, transform, & texture
+	//for (int i = 0; i < NUM_OBJECTS; i++)
+	//{
+	//	SetTransforms(i); // done
+	//	SetShader(i);
+	//	m_shader[i].Update(transform[i], m_Camera);
+	//	texture[i].Bind(0); // done
+	//	m_mesh[i].Draw(); // done
+	//}
 	////model 1 - frog
 	//SetTransforms(FROG);
 	//SetShader(FOG);
@@ -141,7 +179,8 @@ void MainGame::DrawGame()
 	//texture[PUMPKIN].Bind(0);
 	//m_mesh[PUMPKIN].Draw();
 
-	counter = counter + 0.005f;
+	frogGO.IncrementCounter();
+	/*counter = counter + 0.005f;*/
 
 	_gameDisplay.SwapBuffer();
 }
@@ -170,40 +209,40 @@ bool MainGame::Collided(glm::vec3 pos1, float radius1, glm::vec3 pos2, float rad
 	return false;
 }
 
-void MainGame::SetTransforms(int objectType)
-{
-	switch (objectType)
-	{
-	case FROG:
-		/*transform[FROG].SetPos(glm::vec3(0.0f, 0.0f, sinf(counter) * 4.0f));
-		transform[FROG].SetRot(glm::vec3(0.0f, counter * 1.0f, 0.0f));
-		transform[FROG].SetScale(glm::vec3(2.0f, 2.0f, 2.0f));*/
-		
-		transform[FROG].SetPos(glm::vec3(sinf(counter), 0.0f, -2.0f));
-		transform[FROG].SetRot(glm::vec3(0.0f, 0.0f /*counter * 1.0f*/, 0.0f));
-		transform[FROG].SetScale(glm::vec3(1.0f, 1.0f, 1.0f));
-
-		break;
-
-	case BEE:
-		transform[BEE].SetPos(glm::vec3(counter - 4.0f, 0.0f, 3.0f));
-		transform[BEE].SetRot(glm::vec3(0.0f, -counter * 1.0f, 0.0f));
-		transform[BEE].SetScale(glm::vec3(0.5f, 0.5f, 0.5f));
-		break;
-
-	case PUMPKIN:
-		//transform[PUMPKIN].SetPos(glm::vec3(/*counter - 0.0f*/ 3.0f, 1.0f, 3.0f));
-		//transform[PUMPKIN].SetRot(glm::vec3(0.0f, 0.0f /*counter * 1.0f*/, 0.0f));
-		//transform[PUMPKIN].SetScale(glm::vec3(0.75f, 0.75f, 0.75f));
-		transform[PUMPKIN].SetPos(glm::vec3(0.0f, 0.0f, /*sinf(counter) * */3.0f));
-		transform[PUMPKIN].SetRot(glm::vec3(0.0f, 0.0f, 0.0f)); // still
-		//transform[PUMPKIN].SetRot(glm::vec3(0.0f, counter * 1.0f, 0.0f)); // rotate
-		transform[PUMPKIN].SetScale(glm::vec3(1.0f, 1.0f, 1.0f));
-
-
-		break;
-	}
-}
+//void MainGame::SetTransforms(int objectType)
+//{
+//	switch (objectType)
+//	{
+//	case FROG:
+//		/*transform[FROG].SetPos(glm::vec3(0.0f, 0.0f, sinf(counter) * 4.0f));
+//		transform[FROG].SetRot(glm::vec3(0.0f, counter * 1.0f, 0.0f));
+//		transform[FROG].SetScale(glm::vec3(2.0f, 2.0f, 2.0f));*/
+//		
+//		transform[FROG].SetPos(glm::vec3(sinf(counter), 0.0f, -2.0f));
+//		transform[FROG].SetRot(glm::vec3(0.0f, 0.0f /*counter * 1.0f*/, 0.0f));
+//		transform[FROG].SetScale(glm::vec3(1.0f, 1.0f, 1.0f));
+//
+//		break;
+//
+//	case BEE:
+//		transform[BEE].SetPos(glm::vec3(counter - 4.0f, 0.0f, 3.0f));
+//		transform[BEE].SetRot(glm::vec3(0.0f, -counter * 1.0f, 0.0f));
+//		transform[BEE].SetScale(glm::vec3(0.5f, 0.5f, 0.5f));
+//		break;
+//
+//	case PUMPKIN:
+//		//transform[PUMPKIN].SetPos(glm::vec3(/*counter - 0.0f*/ 3.0f, 1.0f, 3.0f));
+//		//transform[PUMPKIN].SetRot(glm::vec3(0.0f, 0.0f /*counter * 1.0f*/, 0.0f));
+//		//transform[PUMPKIN].SetScale(glm::vec3(0.75f, 0.75f, 0.75f));
+//		transform[PUMPKIN].SetPos(glm::vec3(0.0f, 2.0f, /*sinf(counter) * */3.0f));
+//		transform[PUMPKIN].SetRot(glm::vec3(0.0f, 0.0f, 0.0f)); // still
+//		//transform[PUMPKIN].SetRot(glm::vec3(0.0f, counter * 1.0f, 0.0f)); // rotate
+//		transform[PUMPKIN].SetScale(glm::vec3(1.0f, 1.0f, 1.0f));
+//
+//
+//		break;
+//	}
+//}
 
 void MainGame::SetShader(int shaderType)
 {

@@ -6,6 +6,7 @@
 
 #include "Camera.h"
 #include "Display.h" 
+#include "GameObject.h"
 #include "Mesh.h"
 #include "Shader.h"
 #include "stb_image.h" //needed?
@@ -18,6 +19,9 @@ enum GameObjects : int { FROG, BEE, PUMPKIN, NUM_OBJECTS };
 
 enum Shaders : int { FOG, BASIC, TOON, NUM_SHADERS };
 
+//float counter;
+//Transform transform[3];
+
 class MainGame
 {
 	void InitSystems();
@@ -25,16 +29,22 @@ class MainGame
 	void GameLoop();
 	void DrawGame();
 
-	void SetTransforms(int objectType);
+	//void SetTransforms(int objectType);
 	void SetShader(int shaderType);
 	void SetTexture();
 
 	bool Collided(glm::vec3 pos1, float radius1, glm::vec3 pos2, float radius2);
 
 	Display _gameDisplay/*(1024, 768, const "Labs")*/;
+	glm::vec4 m_sceneBGColour = { 0.11f, 0.07f, 0.033f, 1.0f }; // dark brown
 	GameState _gameState;
 
 	int mouseX, mouseY;
+
+	GameObject frogGO;
+	GameObject beeGO;
+	GameObject pumpkinGO;
+
 
 	Mesh m_mesh[NUM_OBJECTS]; // make a vector?
 	/*Mesh mesh1;
@@ -52,7 +62,7 @@ class MainGame
 	Shader fogShader;*/
 
 
-	float counter;
+	/*float counter;*/
 
 public:
 	MainGame() /*: _gameDisplay(1024, 768, "Game Window"), _gameState(GameState::PLAY), counter(0)*/;
