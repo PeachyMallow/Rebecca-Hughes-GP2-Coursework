@@ -6,9 +6,7 @@ in vec3 normal;
 in vec4 v_Pos;
 
 uniform sampler2D diffuse;
-
-vec4 colorStart = vec4 (1.0, 1.0, 1.0, 1.0 );
-vec4 colorEnd = vec4(0.0, 0.0, 1.0, 1.0 );
+uniform vec3 u_lighting;
 
 void main()
 {
@@ -19,12 +17,12 @@ void main()
 	vec3 lightDir = vec3(0.0f, 0.0f, -1.0f);
 
 	vec4 texture = texture2D(diffuse, v_texCoord); // if you enable transparency alpha, then could avoid repitition
-	float intensity = 1 - max(dot(normalize(normal), normalize(lightDir)), 0.0); // inverse of light direction 
+	float intensity = 1 - max(dot(normalize(normal), normalize(u_lighting)), 0.0); // inverse of light direction 
 
 	intensity = max(0.0, intensity); //max so the value is not negative
 	intensity = pow(intensity, 4.0f); // higher second value - sharper drop in effect
 
-	if (intensity >= 0.75f)
+	if (intensity >= 0.75f) // stop the effect showing on the other side of the object
 	{
 		intensity = 0.0f;
 	}

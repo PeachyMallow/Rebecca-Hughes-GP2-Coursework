@@ -56,6 +56,8 @@ class Shader
 	std::unordered_map<std::string, S_VertAndFrag> m_shaders; // change s_VertandFrag to just gluint array? 
 	std::unordered_map<std::string, GLuint> m_programs;
 
+	glm::vec4 lightPos = { 0.0f, 0.0f, -20.0f, 1.0f };
+
 	GLuint basicShader = 1;
 	GLuint toonShader = 2;
 	GLuint fogShader = 3;
@@ -79,10 +81,12 @@ public:
 	GLuint CreateShader(const std::string& text, GLuint shaderType);
 	//void SetUniform()
 
-	GLint GetShader(const std::string& shaderName);
+	//GLint GetShader(const std::string& shaderName);
 
-	void ActivateShaders();
+	//void ActivateShaders();
 
 	GLint GetUniformLocation(const std::string& name);
+	//void SetLightingUniform(const std::string& name, const Camera& camera);
+
 };
 

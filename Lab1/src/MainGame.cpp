@@ -53,8 +53,9 @@ void MainGame::InitSystems()
 	
 
 	m_Camera.initCamera(glm::vec3(0, 0, -5), 70.0f, (float)_gameDisplay.GetWidth() / _gameDisplay.GetHeight(), 0.01f, 1000.0f);
-
-	//counter
+	
+	//set lighting uniform here
+	//m_shader[FROG].SetLightingUniform("u_lighting", m_Camera);
 }
 
 void MainGame::GameLoop()
@@ -117,6 +118,7 @@ void MainGame::DrawGame()
 		SetTransforms(i);
 		SetShader(i);
 		m_shader[i].Update(transform[i], m_Camera);
+		//m_shader[FROG].SetLightingUniform("u_lighting", m_Camera);
 		texture[i].Bind(0);
 		m_mesh[i].Draw();
 	}
@@ -177,9 +179,9 @@ void MainGame::SetTransforms(int objectType)
 		transform[FROG].SetRot(glm::vec3(0.0f, counter * 1.0f, 0.0f));
 		transform[FROG].SetScale(glm::vec3(2.0f, 2.0f, 2.0f));*/
 		
-		transform[FROG].SetPos(glm::vec3(2.0f, 0.0f, 1.0f));
+		transform[FROG].SetPos(glm::vec3(sinf(counter), 0.0f, -2.0f));
 		transform[FROG].SetRot(glm::vec3(0.0f, 0.0f /*counter * 1.0f*/, 0.0f));
-		transform[FROG].SetScale(glm::vec3(2.0f, 2.0f, 2.0f));
+		transform[FROG].SetScale(glm::vec3(1.0f, 1.0f, 1.0f));
 
 		break;
 
@@ -193,10 +195,10 @@ void MainGame::SetTransforms(int objectType)
 		//transform[PUMPKIN].SetPos(glm::vec3(/*counter - 0.0f*/ 3.0f, 1.0f, 3.0f));
 		//transform[PUMPKIN].SetRot(glm::vec3(0.0f, 0.0f /*counter * 1.0f*/, 0.0f));
 		//transform[PUMPKIN].SetScale(glm::vec3(0.75f, 0.75f, 0.75f));
-		transform[PUMPKIN].SetPos(glm::vec3(0.0f, 0.0f, sinf(counter) * 3.0f));
-		//transform[PUMPKIN].SetRot(glm::vec3(0.0f, 0.0f, 0.0f)); // still
-		transform[PUMPKIN].SetRot(glm::vec3(0.0f, counter * 1.0f, 0.0f)); // rotate
-		transform[PUMPKIN].SetScale(glm::vec3(0.75f, 0.75f, 0.75f));
+		transform[PUMPKIN].SetPos(glm::vec3(0.0f, 0.0f, /*sinf(counter) * */3.0f));
+		transform[PUMPKIN].SetRot(glm::vec3(0.0f, 0.0f, 0.0f)); // still
+		//transform[PUMPKIN].SetRot(glm::vec3(0.0f, counter * 1.0f, 0.0f)); // rotate
+		transform[PUMPKIN].SetScale(glm::vec3(1.0f, 1.0f, 1.0f));
 
 
 		break;

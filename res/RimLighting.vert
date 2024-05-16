@@ -9,14 +9,14 @@ out vec3 normal;
 out vec2 v_texCoord;
 //out vec3 lightPos;
 
-uniform mat4 transform;
-//uniform vec3 lighting;
+uniform mat4 u_transform;
+uniform vec3 u_lighting;
 
 void main()
 {
-	v_Pos = transform * vertexPos;
+	v_Pos = u_transform * vertexPos;
 	v_texCoord = vertexTexCoord;
 	normal = vertexNormals;
 	//lightPos = lighting;
-	gl_Position = transform * vertexPos;
+	gl_Position = u_transform * vertexPos;
 }
