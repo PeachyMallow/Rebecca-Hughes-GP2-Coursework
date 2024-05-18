@@ -6,12 +6,22 @@ unsigned int indices[] = { 0, 1, 2 };
 //Transform transform2;
 //Transform transform3;
 
+GLfloat GameObject::m_counter = 0.0f;
 
-MainGame::MainGame() : _gameDisplay(1024, 768, "Game Window"), _gameState(GameState::PLAY)/*, counter(0)*//*, mesh(), mesh1(), mesh2(), myCamera()*/
+MainGame::MainGame() : m_gameDisplay(1024, 768, "Game Window"), _gameState(GameState::PLAY), mouseX(0), mouseY(0), m_frameCounter(0)
 {
+	m_gameDisplay.InitDisplay();
+	m_Camera.InitCamera(glm::vec3(0, 0, -10), 70.0f, (float)m_gameDisplay.GetWidth() / m_gameDisplay.GetHeight(), 0.01f, 1000.0f);
+
+	// pre-allocates correct amount of memory needed for gameObjects per the enum in header
+	// to prevent reallocation of memory once objects are added
+	m_gameObjects.reserve(NUM_GAME_OBJECTS);
+
+	
+
 	//Mesh newMesh; // change name?
 	//Camera camera;
-
+	//
 //	//_gameState = static_cast<GameState>(GameState::PLAY); // IF USING MOVE TO SEPARATE FUNC? DO WE EVEN NEED GAMESTATE?
 // 
 //	_gameState = GameState::PLAY;
@@ -26,51 +36,45 @@ MainGame::~MainGame()
 
 void MainGame::Run()
 {
-	this->InitSystems(); // only runs once
+	this->LoadAndSetSystems(); // only runs once
 	this->GameLoop();
 }
 
-void MainGame::InitSystems()
+void MainGame::LoadAndSetSystems()
 {
-	_gameDisplay.InitDisplay();
-
-	// shaders
-	m_shader[FROG].InitShaders("toonShader");
-	m_shader[BEE].InitShaders("basicShader");
-	//m_shader[PUMPKIN].InitShaders("toonShader");
-	m_shader[PUMPKIN].InitShaders("RimLighting");
-
-	frogGO.InitGameObj("Frog", "FrogTex");
-	beeGO.InitGameObj("Bee", "BeeTex");
-	pumpkinGO.InitGameObj("Pumpkin", "PumpkinTex");
-
-	frogGO.SetTransforms(3.0f, -1.0); // pos x
-	beeGO.SetTransforms(-4.0f, 0.0); // pos x
-	pumpkinGO.SetTransforms(4.0f, 1.0);
-
+	// load and shaders
+	m_shaders["Fog"].InitShaders("fogShader");
+	m_shaders["Basic"].InitShaders("basicShader");
+	m_shaders["Toon"].InitShaders("toonShader");
+	m_shaders["Rim_L"].InitShaders("RimLighting");
 	
+	// initialise gameobjects and load respective texture
+	for (size_t i = 0; i < NUM_GAME_OBJECTS; i++)
+	{
+		m_gameObjects.emplace_back(GameObject());
+	}
+
+	m_gameObjects[FROG].InitGameObj("Frog", "CapeRainFrog_Diff", 2.0f, 0.0f, 4.0f);
+	m_gameObjects[BEE].InitGameObj("Bee", "BeeTex", -2.0f, 0.0f, 4.0f);
+	m_gameObjects[PUMPKIN].InitGameObj("Pumpkin", "PumpkinTex", 0.0f, 0.0f, 4.0f);
 
 
-	/*SetTransforms(FROG);
-	SetTransforms(BEE);
-	SetTransforms(PUMPKIN);*/
+	SetShader(currentShader);
+
+	//SetTransforms(FROG);
+	//SetTransforms(BEE);
+	//SetTransforms(PUMPKIN);
 	//----
-	m_mesh[FROG].LoadModel("Frog");
-	m_mesh[BEE].LoadModel("Bee");
-	m_mesh[PUMPKIN].LoadModel("Pumpkin");
-
-	// texture
-	texture[FROG].LoadTexture("FrogTex");
-	texture[BEE].LoadTexture("BeeTex");
-	texture[PUMPKIN].LoadTexture("PumpkinTex");
+	//m_mesh[FROG].LoadModel("Frog");
+	//m_mesh[BEE].LoadModel("Bee");
+	//m_mesh[PUMPKIN].LoadModel("Pumpkin");
+	//// texture
+	//texture[FROG].LoadTexture("FrogTex");
+	//texture[BEE].LoadTexture("BeeTex");
+	//texture[PUMPKIN].LoadTexture("PumpkinTex");
 	//----
 	//m_shader.InitProgram();
-
-	
-	
-
-	m_Camera.InitCamera(glm::vec3(0, 0, -5), 70.0f, (float)_gameDisplay.GetWidth() / _gameDisplay.GetHeight(), 0.01f, 1000.0f);
-	
+	//m_shader[3].SetLightPos(m_Camera);
 	//set lighting uniform here
 	//m_shader[FROG].SetLightingUniform("u_lighting", m_Camera);
 }
@@ -86,70 +90,172 @@ void MainGame::GameLoop()
 
 void MainGame::ProcessInput()
 {
-	SDL_Event evnt; // create SDL event
+	/*SDL_Event evnt;*/ // create SDL event
 
-	const Uint8* keyStates = SDL_GetKeyboardState(NULL); // video
-	std::string inputText;// video
-
-	while (SDL_PollEvent(&evnt) /* != 0 */) //SDL_PollEvent - Event Loop (a queue)
+	while (SDL_PollEvent(&evnt) != 0) //SDL_PollEvent - Event Loop (a queue)
 	{
 		if (evnt.type == SDL_QUIT)
 		{
 			_gameState = GameState::EXIT;
 		}
 
-		if (keyStates[SDL_SCANCODE_W])// video
+		switch (evnt.type)
 		{
-			std::cout << "W Pressed" << std::endl;
+			// maybe W & S to move object in and out then mouse to drag along pos x & y
+			// PRINTING TWICE FOR SOME REASON
+			
+		case SDL_KEYDOWN:
+
+			switch (evnt.key.keysym.sym)
+			{
+			//shaders
+			case SDLK_1:
+				std::cout << "Fog Shader Active" << std::endl;
+				currentShader = "Fog";
+				SetShader(currentShader);
+				break;
+
+			case SDLK_2:
+				std::cout << "Basic Shader Active" << std::endl;
+				currentShader = "Basic";
+				SetShader(currentShader);
+				break;
+
+			case SDLK_3:
+				std::cout << "Toon Shader Active" << std::endl;
+				currentShader = "Toon";
+				SetShader(currentShader);
+				break;
+
+			case SDLK_4:
+				std::cout << "Rim Lighting Shader Active" << std::endl;
+				currentShader = "Rim_L";
+				SetShader(currentShader);
+				break;
+
+			case SDLK_w:
+				std::cout << "moving up" << std::endl;
+				break;
+
+			case SDLK_s:
+				std::cout << "moving down" << std::endl;
+				break;
+
+			case SDLK_a:
+				std::cout << "moving left" << std::endl;
+				m_gameObjects[FROG].MoveLeft();
+				break;
+
+			case SDLK_d:
+				std::cout << "moving right" << std::endl;
+				break;
+
+			
+			
+			
+			default:
+				break;
+			}
+
+		/*case SDL_KEYUP:*/
+
+			//up 
+			//if (keyStates[SDL_SCANCODE_1])
+			//{
+			//	std::cout << "Fog Shader Active" << std::endl;
+			//	currentShader = "Fog";
+			//	SetShader(currentShader);
+			//}
+			////down
+			//if (keyStates[SDL_SCANCODE_2])
+			//{
+			//	std::cout << "Basic Shader Active" << std::endl;
+			//	currentShader = "Basic";
+			//	SetShader(currentShader);
+			//}
+			//right
+			//if (keyStates[SDL_SCANCODE_3])
+			//{
+			//	std::cout << "Toon Shader Active" << std::endl;
+			//	currentShader = "Toon";
+			//	SetShader(currentShader);
+			//}
+			////left
+			//if (keyStates[SDL_SCANCODE_4])
+			//{
+			//	std::cout << "Rim Lighting Shader Active" << std::endl;
+			//	currentShader = "Rim_L";
+			//	SetShader(currentShader);
+			//}
+
+		case SDL_MOUSEMOTION:
+			SDL_GetMouseState(&mouseX, &mouseY);
+
+			//std::cout << "mouse x: " << mouseX << "mouse y: " << mouseY << std::endl;
+			break;
+
+
+		case SDL_MOUSEBUTTONDOWN:
+			
+			if (evnt.button.button == SDL_BUTTON_LEFT)
+			{
+				//std::cout << "Left mouse button clicked!" << std::endl;
+			}
+
+			break;
+			// case SDL_MOUSEBUTTONUP
+
+		case SDL_MOUSEWHEEL:
+
+			if (evnt.wheel.y > 0)
+			{
+				//std::cout << "wheel scrolling up" << std::endl;
+			}
+
+			if (evnt.wheel.y < 0)
+			{
+				//std::cout << "wheel scrolling down" << std::endl;
+			}
+			break;
+
+		default:
+			break;
 		}
+
+		//SDL_Delay(50); // maybe keep? 
 	}
 
-	SDL_GetMouseState(&mouseX, &mouseY);
-
-	//std::cout << "mouse x: " << mouseX << "mouse y: " << mouseY << std::endl;
+	
 }
-
-//while (SDL_PollEvent(&evnt) /* != 0 */) //SDL_PollEvent - Event Loop (a queue)
-//{
-//	switch (evnt.type)
-//	{
-//	case SDL_QUIT:
-//		_gameState = GameState::EXIT;
-//		break;
 
 void MainGame::DrawGame()
 {
-	_gameDisplay.ClearDisplay(m_sceneBGColour.x, m_sceneBGColour.y, m_sceneBGColour.z, m_sceneBGColour.w);
+	m_gameDisplay.ClearDisplay(m_sceneBGColour.x, m_sceneBGColour.y, m_sceneBGColour.z, m_sceneBGColour.w);
 	
 	// check for collision here?
-	//if (Collided(transform1.GetPos(), mesh1.GetRadius(), transform2.GetPos(), mesh2.GetRadius()))
-	//{	
-	//	//std::cout << "Model 1 radius: " << mesh1.GetRadius() << std::endl;
-	//	//std::cout << "Model 2 radius: " << mesh2.GetRadius() << std::endl;
-	//}
+//if (Collided(transform1.GetPos(), mesh1.GetRadius(), transform2.GetPos(), mesh2.GetRadius()))
+//{	
+//	//std::cout << "Model 1 radius: " << mesh1.GetRadius() << std::endl;
+//	//std::cout << "Model 2 radius: " << mesh2.GetRadius() << std::endl;
+//}
+// if pos reaches edge of window then turn back
 
-	// if pos reaches edge of window then turn back
+	m_shaders[currentShader].SetLightPos(m_Camera);
+
+	for (GameObject& obj : m_gameObjects)
+	{
+		m_shaders[currentShader].UpdateLight(obj.GetObjTransform(), m_Camera);
+		m_shaders[currentShader].Update(obj.GetObjTransform(), m_Camera);
+		obj.DrawGOwithTexture();
+		obj.Move(obj);
+	}
+
+	m_gameObjects[FROG].IncrementCounter(0.00001f); // needed?
+
+
+	//------------^
 	
-
-	SetShader(0);
-	m_shader[0].Update(frogGO.GetObjTransform(), m_Camera);
-	m_shader[0].Update(beeGO.GetObjTransform(), m_Camera);
-	m_shader[0].Update(beeGO.GetObjTransform(), m_Camera);
-
-	frogGO.DrawGameObject();
-	//beeGO.DrawGameObject();
-	//pumpkinGO.DrawGameObject();
-
-	frogGO.Move();
-
-//	m_shader[0].Update(transform[i], m_Camera);
-	
-	/*SetTransforms(1);
-	SetShader(1);
-	
-	texture[1].Bind(0);
-	m_mesh[1].Draw();*/
-
+	//------------
 	// for each object to have a different:
 	// shader, texture, transform, & texture
 	//for (int i = 0; i < NUM_OBJECTS; i++)
@@ -160,29 +266,11 @@ void MainGame::DrawGame()
 	//	texture[i].Bind(0); // done
 	//	m_mesh[i].Draw(); // done
 	//}
-	////model 1 - frog
-	//SetTransforms(FROG);
-	//SetShader(FOG);
-	//m_shader[FROG].Update(transform[FROG], m_Camera);
-	//texture[FROG].Bind(0);
-	//m_mesh[FROG].Draw();
-	////model 2 - bee
-	//SetTransforms(BEE);
-	//SetShader(BASIC);
-	//m_shader[BEE].Update(transform[BEE], m_Camera);
-	//texture[BEE].Bind(0);
-	//m_mesh[BEE].Draw();
-	////model 2 - pumpkin
-	//SetTransforms(PUMPKIN);
-	//SetShader(TOON);
-	//m_shader[PUMPKIN].Update(transform[PUMPKIN], m_Camera);
-	//texture[PUMPKIN].Bind(0);
-	//m_mesh[PUMPKIN].Draw();
+	//counter = counter + 0.005f;
+	//------------^
 
-	frogGO.IncrementCounter();
-	/*counter = counter + 0.005f;*/
-
-	_gameDisplay.SwapBuffer();
+	m_frameCounter = m_frameCounter + 0.005f;
+	m_gameDisplay.SwapBuffer();
 }
 
 // collision detection               MIGHT NOT NEED ONE OF THE AXIS?
@@ -244,28 +332,15 @@ bool MainGame::Collided(glm::vec3 pos1, float radius1, glm::vec3 pos2, float rad
 //	}
 //}
 
-void MainGame::SetShader(int shaderType)
+void MainGame::SetShader(const std::string& shaderName)
 {
-	switch (shaderType)
-	{
-	case FOG:
-		m_shader[FOG].Bind();
-		break;
-
-	case BASIC:
-		m_shader[BASIC].Bind();
-		break;
-
-	case TOON:
-		m_shader[TOON].Bind();
-		break;
-	}
+	m_shaders[shaderName].Bind();
 }
 
-void MainGame::SetTexture()
-{
-
-}
+//void MainGame::SetTexture()
+//{
+//
+//}
 
 
 ////access number of elements in array by dividing the size of the array by the size of the data type it contains

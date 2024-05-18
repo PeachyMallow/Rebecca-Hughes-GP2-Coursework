@@ -28,14 +28,17 @@
 
 Shader::~Shader()
 {
-	for (auto itr = m_shaders.begin(); itr != m_shaders.end(); itr++) 
+	/*for (auto itr = m_shaders.begin(); itr != m_shaders.end(); itr++)
 	{
 		for (GLuint& shader : itr->second._shaders)
-		{ 
-			glDetachShader(m_program, shader);
-			glDeleteShader(shader);
-		}
+		{ */
+	for (GLuint& shader : shaders)
+	{
+		glDetachShader(m_program, shader);
+		glDeleteShader(shader);
 	}
+	//	}
+	//}
 
 	glDeleteProgram(m_program);
 }
@@ -47,28 +50,27 @@ void Shader::InitProgram(const std::string& filename)
 
 void Shader::InitShaders(const std::string& filename)
 {
-	InitProgram(filename);
+	//InitProgram(filename);
 
 	m_program = glCreateProgram(); // maybe move to constructor once hash tables are sorted
 
-	m_shaders[filename] = 
-		S_VertAndFrag {{CreateShader(LoadShader("..\\res\\" + filename + ".vert"), GL_VERTEX_SHADER),
-						CreateShader(LoadShader("..\\res\\" + filename + ".frag"), GL_FRAGMENT_SHADER)}};
+	//m_shaders[filename] = 
+	//	S_VertAndFrag {{CreateShader(LoadShader("..\\res\\" + filename + ".vert"), GL_VERTEX_SHADER),
+	//					CreateShader(LoadShader("..\\res\\" + filename + ".frag"), GL_FRAGMENT_SHADER)}};
 
-	for (unsigned int i = 0; i <= m_shaders.size(); i++)
+	//for (unsigned int i = 0; i <= m_shaders.size(); i++)
+	//{
+	//	glAttachShader(m_program, m_shaders[filename]._shaders[i]);
+	//}
+
+
+	shaders[0] = CreateShader(LoadShader("..\\res\\shaders\\" + filename + ".vert"), GL_VERTEX_SHADER);
+	shaders[1] = CreateShader(LoadShader("..\\res\\shaders\\" + filename + ".frag"), GL_FRAGMENT_SHADER);
+	
+	for (GLuint& shader : shaders)
 	{
-		glAttachShader(m_program, m_shaders[filename]._shaders[i]);
+		glAttachShader(m_program, shader);
 	}
-
-	//pre hash table
-	//-------------
-	/*shaders[0] = CreateShader(LoadShader("..\\res\\" + filename + ".vert"), GL_VERTEX_SHADER);
-	//shaders[1] = CreateShader(LoadShader("..\\res\\" + filename + ".frag"), GL_FRAGMENT_SHADER);
-	//for (GLuint& shader : shaders)
-	{
-		glAttachShader(program, shader);
-	}*/
-	//-------------
 
 	glBindAttribLocation(m_program, 0, "vertexPos");
 	glBindAttribLocation(m_program, 1, "vertexTexCoord");
@@ -89,16 +91,19 @@ void Shader::Bind()
 	glUseProgram(m_program);
 }
 
+// update light uniform with lights position to object
+// made x & y axes negative so light pos looks like it's coming from the camera
+void Shader::UpdateLight(const glm::mat4& objTransform, const Camera& camera)        // could use camera instead of 'lightPos', could move to Update below 
+{
+	glm::vec4 lightPosVP = (objTransform * lightPos * glm::vec4(-1.0f, -1.0f, 1.0f, -1.0f));
+
+	glUniform3f(u_locations["u_lighting"], lightPosVP.x, lightPosVP.y, lightPosVP.z);
+}
+
 void Shader::Update(const glm::mat4& objTransform, const Camera& camera)
 {
-	mvp = camera.GetViewProjection() * objTransform;
+	mvp = camera.GetMVP() * objTransform;
 	glUniformMatrix4fv(u_locations["u_transform"], 1, GLU_FALSE, &mvp[0][0]); // update transform uniform
-	
-	glm::vec4 lightPosMVP = mvp * lightPos;
-	glUniform3f(u_locations["u_lighting"], lightPosMVP.x, lightPosMVP.y, lightPosMVP.z);
-
-	/*glm::mat4 model = transform.GetModelMatrix();
-	glUniformMatrix4fv(uniforms[TRANSFORM_U], 1, GLU_FALSE, &model[0][0]);*/
 }
 
 // read shaders from a text file
@@ -177,6 +182,11 @@ GLuint Shader::CreateShader(const std::string& shaderSrc, GLuint shaderType)
 	CheckShaderError(shaderID, GL_COMPILE_STATUS, false, "Error compiling shader!"); //check for compile error
 
 	return shaderID;
+}
+
+void Shader::SetLightPos(const Camera& camera)
+{
+	lightPos = glm::vec4(camera.GetCameraPos(), 1.0f);
 }
 
 //GLint Shader::GetShader(const std::string& shaderName)

@@ -4,7 +4,7 @@
 #include "Shader.h" // ??
 #include "Texture.h"
 #include "Transform.h"
-
+//#include "Physics.h"
 
 
 class GameObject
@@ -13,20 +13,27 @@ class GameObject
 	Mesh m_mesh;
 	Texture m_texture;
 	Transform m_transform; 
-	float m_counter;
+	static float m_counter;
 
 public:
 
-	GameObject() : m_mesh(), m_texture(), m_transform(), m_counter(0) {};
+	GameObject() : m_mesh(), m_texture(), m_transform() {};
 	~GameObject() {};
-	void InitGameObj(const std::string& modelFileName, const std::string& texFileName);
+	void InitGameObj(const std::string& modelFileName, const std::string& texFileName, GLfloat posX, GLfloat posY, GLfloat posZ);
 
-	void SetTransforms(GLfloat posX, GLfloat posY);
+	//void SetTransforms(GLfloat posX, GLfloat posY);
 	glm::mat4 GetObjTransform() { return this->m_transform.GetModMatrix(); };
 	//void SetShader
-	void DrawGameObject();
-	void Move();
-	void IncrementCounter();
+	void DrawGOwithTexture();
+
+	void MoveLeft();
+	void Move(GameObject& obj);
+
+	void MoveFrog();
+	void MoveBee();
+	void MovePumpkin();
+
+	void IncrementCounter(GLfloat increaseAmount);
 	//// shaders
 	//m_shader[FROG].InitShaders("toonShader");
 	//m_shader[BEE].InitShaders("basicShader");

@@ -46,7 +46,7 @@ void Texture::LoadTexture(const std::string& fileName)
 {
 	int width, height, numComponents; // values set in stbi_load()
 
-	unsigned char* imageData = stbi_load(("..\\res\\" + fileName + ".png").c_str(), &width, &height, &numComponents, 4); //loads image from file, and memory addresses where the program data can be saved
+	unsigned char* imageData = stbi_load(("..\\res\\textures\\" + fileName + ".png").c_str(), &width, &height, &numComponents, 4); //loads image from file, and memory addresses where the program data can be saved
 
 	if (imageData == NULL)
 	{

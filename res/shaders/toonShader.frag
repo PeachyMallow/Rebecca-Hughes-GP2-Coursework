@@ -13,7 +13,10 @@ void main()
 	//vec3 lightColour = vec3(1.0f, 1.0f, 1.0f);
 
 	vec4 texture = texture2D(diffuse, v_texCoord); // if you enable transparency alpha, then could avoid repitition
-	float intensity = max(dot(normalize(normal), normalize(u_lighting)), 0.0);
+	
+	vec3 lightDir = normalize(u_lighting - normal);
+	
+	float intensity = max(dot(normalize(normal), normalize(lightDir)), 0.0);
 
 	if (intensity <= 0.5f)
 	{

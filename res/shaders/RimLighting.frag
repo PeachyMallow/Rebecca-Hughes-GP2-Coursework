@@ -14,10 +14,11 @@ void main()
 	float dist = abs(v_Pos.z);
 
 	//vec3 lightDir = vec3(0.5f, 0.5f, 0.5f);
-	vec3 lightDir = vec3(0.0f, 0.0f, -1.0f);
+	vec3 lightDir = normalize(u_lighting - normal);
+
 
 	vec4 texture = texture2D(diffuse, v_texCoord); // if you enable transparency alpha, then could avoid repitition
-	float intensity = 1 - max(dot(normalize(normal), normalize(u_lighting)), 0.0); // inverse of light direction 
+	float intensity = 1 - max(dot(normalize(normal), normalize(lightDir)), 0.0); // inverse of light direction 
 
 	intensity = max(0.0, intensity); //max so the value is not negative
 	intensity = pow(intensity, 4.0f); // higher second value - sharper drop in effect

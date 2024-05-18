@@ -47,20 +47,20 @@ class Shader
 	};
 
 	GLuint m_program; // track the shader program
-	//GLuint shaders[NUM_SHADERS]; // array of shaders
+	GLuint shaders[NUM_SHADERS]; // array of shaders
 	GLuint uniforms[NUM_UNIFORMS]; //no of uniform variables
 
 	glm::mat4 mvp;
 	std::unordered_map<std::string, GLint> u_locations;
 
-	std::unordered_map<std::string, S_VertAndFrag> m_shaders; // change s_VertandFrag to just gluint array? 
+	//std::unordered_map<std::string, S_VertAndFrag> m_shaders; // change s_VertandFrag to just gluint array? 
 	std::unordered_map<std::string, GLuint> m_programs;
 
-	glm::vec4 lightPos = { 0.0f, 0.0f, -20.0f, 1.0f };
+	glm::vec4 lightPos = { 0.0f, 0.0f, 0.0f, 1.0f };
 
 public: 
 	Shader() : /*shaders{ NUM_SHADERS },*/ uniforms{ NUM_UNIFORMS }
-	{ /*program = glCreateProgram();*/ };
+	{ /*m_program = glCreateProgram(); */};
 
 	//Shader(const std::string& filename) /*: program(0), shaders{NUM_SHADERS}*/;
 	~Shader();
@@ -69,6 +69,7 @@ public:
 	void InitProgram(const std::string& filename);
 	void InitShaders(const std::string& filename);
 	void Bind(); // set GPU to use our shaders
+	void UpdateLight(const glm::mat4& objTransform, const Camera& camera);
 	void Update(const glm::mat4& objTransform, const Camera& camera);
 
 	std::string LoadShader(const std::string& fileName);
@@ -77,6 +78,7 @@ public:
 	//void SetUniform()
 	//GLint GetShader(const std::string& shaderName);
 	//void ActivateShaders();
+	void SetLightPos(const Camera& camera);
 	GLint GetUniformLocation(const std::string& name);
 	//void SetLightingUniform(const std::string& name, const Camera& camera);
 

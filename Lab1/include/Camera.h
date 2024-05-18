@@ -15,11 +15,23 @@ struct Camera
 		this->projection = glm::perspective(fov, aspect, nearClip, farClip);
 	}
 
-	inline glm::mat4 GetViewProjection() const
+	inline glm::mat4 GetMVP() const
 	{
 		return projection * glm::lookAt(pos, pos + forward, up);
 	}
 	
+	inline glm::mat4 GetCameraView() const
+	{
+		return glm::lookAt(pos, pos + forward, up);
+	}
+
+	inline glm::vec3 GetCameraPos() const
+	{
+		return pos;
+	}
+
+
+
 	//inline glm::mat4 GetLightProjection() const
 	//{
 	//	return projection * glm::lookAt(pos, pos + forward, up);

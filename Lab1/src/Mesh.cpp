@@ -68,7 +68,7 @@ void Mesh::Init(Vertex* vertices, unsigned int numVertices, unsigned int* indice
 
 void Mesh::LoadModel(const std::string& fileName)
 {
-	IndexedModel model = OBJModel("..\\res\\" + fileName + ".obj").ToIndexedModel(); // load model from file
+	IndexedModel model = OBJModel("..\\res\\models\\" + fileName + ".obj").ToIndexedModel(); // load model from file
 	InitModel(model); // initialise the new model
 }
 
