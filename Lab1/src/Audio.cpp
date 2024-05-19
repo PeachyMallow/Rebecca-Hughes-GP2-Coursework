@@ -24,28 +24,10 @@ Audio::~Audio()
 	SDL_CloseAudioDevice(m_audioDevice);
 }
 
-void Audio::PlayAudio(/*const bool loop*/)
+void Audio::PlayAudio()
 {
 	int status = SDL_QueueAudio(m_audioDevice, m_wavStart, m_wavLength);
-
-
-
 	SDL_PauseAudioDevice(m_audioDevice, 0);
-
-	/*switch (SDL_GetAudioDeviceStatus(m_audioDevice))
-	{
-	case SDL_AUDIO_STOPPED: std::cout << ("stopped\n") << std::endl; break;
-	case SDL_AUDIO_PLAYING: std::cout << ("playing\n") << std::endl; break;
-	case SDL_AUDIO_PAUSED: std::cout << ("paused\n") << std::endl; break;
-	default: std::cout << ("???") << std::endl; break;
-	}*/
-
-	/*std::cout << m_wavLength << std::endl;*/
-}
-
-void Audio::StopAudio()
-{
-	SDL_PauseAudioDevice(m_audioDevice, 1);
 }
 
 void Audio::SetUpDevice()

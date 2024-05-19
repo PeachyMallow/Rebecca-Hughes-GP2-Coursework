@@ -1,64 +1,60 @@
 #include "GameObject.h"
 
-void GameObject::InitGameObj(const std::string& modelFileName, const std::string& texFileName, GLfloat posX, GLfloat posY, GLfloat posZ)
+void GameObject::InitGameObj(const std::string& modelFileName, const std::string& texFileName, 
+	GLfloat posX, GLfloat posY, GLfloat posZ, GLfloat scaleX, GLfloat scaleY, GLfloat scaleZ,
+	GLfloat radius)
 {
-	this->m_mesh.LoadModelFile(modelFileName);
-
+	this->m_mesh.LoadObjFile(modelFileName);
 	this->m_texture.LoadTexture(texFileName);
 
 	this->m_transform.SetPos(glm::vec3(posX, posY, posZ));
 	this->m_transform.SetRot(glm::vec3(0.0f, 0.0f, 0.0f));
-	this->m_transform.SetScale(glm::vec3(1.0f, 1.0f, 1.0f));
+	this->m_transform.SetScale(glm::vec3(scaleX, scaleY, scaleZ));
+
+	this->m_mesh.SetRadius(radius);
 }
 
 void GameObject::DrawGOwithTexture()
 {
 	this->m_texture.BindTexture(0);
-	this->m_mesh.DrawModel();
+	this->m_mesh.DrawMesh();
 }
 
-void GameObject::Move(GameObject& obj)
+void GameObject::MoveUp()
 {
 	glm::vec3 objPos = *m_transform.GetPos();
-	glm::vec3 objRot = *m_transform.GetRot();
+	
+	m_transform.SetPos(glm::vec3(objPos.x, objPos.y + m_moveSpeed, objPos.z));
+}
 
-	obj.m_transform.SetPos(glm::vec3(objPos.x, objPos.y, objPos.z));
-	obj.m_transform.SetRot(glm::vec3(objRot.x, objRot.y + m_counter, objRot.z));
-	//obj.m_transform.SetScale(glm::vec3(1.0f, 1.0f, 1.0f));
+void GameObject::MoveDown()
+{
+	glm::vec3 objPos = *m_transform.GetPos();
+
+	m_transform.SetPos(glm::vec3(objPos.x, objPos.y - m_moveSpeed, objPos.z));
 }
 
 void GameObject::MoveLeft()
 {
 	glm::vec3 objPos = *m_transform.GetPos();
-	glm::vec3 objRot = *m_transform.GetRot();
 
-	m_transform.SetPos(glm::vec3(objPos.x + 0.005f, objPos.y, objPos.z));
-	//obj.m_transform.SetRot(glm::vec3(objRot.x, objRot.y + m_counter, objRot.z));
-	//obj.m_transform.SetScale(glm::vec3(1.0f, 1.0f, 1.0f));
+	m_transform.SetPos(glm::vec3(objPos.x + m_moveSpeed, objPos.y, objPos.z));
 }
 
-void GameObject::MoveFrog()
+void GameObject::MoveRight()
 {
-	this->m_transform.SetPos(glm::vec3(sinf(m_counter) * 1.5f, 0.0f, 0.0f));
-	this->m_transform.SetRot(glm::vec3(0.0f, 0.0f /*counter * 1.0f*/, 0.0f));
-	this->m_transform.SetScale(glm::vec3(1.0f, 1.0f, 1.0f));
+	glm::vec3 objPos = *m_transform.GetPos();
+
+	m_transform.SetPos(glm::vec3(objPos.x - m_moveSpeed, objPos.y, objPos.z));
 }
 
-void GameObject::MoveBee()
+// bounces currently controlled obj away from obj it collided with
+void GameObject::CollisionMove(GameObject& collidedObj)
 {
-	this->m_transform.SetPos(glm::vec3(1.0f, sinf(m_counter) * 1.5f, 10.0f));
-	this->m_transform.SetRot(glm::vec3(0.0f, 0.0f /*counter * 1.0f*/, 0.0f));
-	this->m_transform.SetScale(glm::vec3(1.0f, 1.0f, 1.0f));
-}
+	glm::vec3 objPos = *m_transform.GetPos();
 
-void GameObject::MovePumpkin()
-{
-	this->m_transform.SetPos(glm::vec3(0.0f, 0.0f, sinf(m_counter) * 6.0f + 3.0f));
-	this->m_transform.SetRot(glm::vec3(0.0f, 0.0f /*counter * 1.0f*/, 0.0f));
-	this->m_transform.SetScale(glm::vec3(1.0f, 1.0f, 1.0f));
-}
+	glm::vec3 offset = glm::normalize(objPos - collidedObj.GetObjPos()) * 2.0f;
+	glm::vec3 newPos = glm::vec3(objPos.x + offset.x, objPos.y + offset.y, objPos.z + offset.z );
 
-void GameObject::IncrementCounter(GLfloat increaseAmount) // incrementing correctly
-{
-	m_counter = m_counter + increaseAmount;
+	m_transform.SetPos(newPos);
 }

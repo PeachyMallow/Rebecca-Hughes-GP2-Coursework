@@ -1,40 +1,40 @@
 #pragma once
 
+#include <iostream>
+
 #include "ObjMesh.h"
-//#include "ShaderManager.h" // ??
 #include "ObjTexture.h"
 #include "ObjTransform.h"
-//#include "Physics.h"
-
 
 class GameObject
 {
-	//shader?
 	ObjMesh m_mesh;
 	ObjTexture m_texture;
 	ObjTransform m_transform;
-	static float m_counter;
+	GLfloat m_moveSpeed = 0.06f;
 
 public:
 
-	GameObject() : m_mesh(), m_texture(), m_transform() {};
 	~GameObject() {};
 
-	// initialises GameObject with: model, texture, & transform
-	void InitGameObj(const std::string& modelFileName, const std::string& texFileName, GLfloat posX, GLfloat posY, GLfloat posZ);
+	// initialises GameObject with: model, texture, transform, & radius
+	void InitGameObj(const std::string& modelFileName, const std::string& texFileName, 
+		GLfloat posX, GLfloat posY, GLfloat posZ, GLfloat scaleX, GLfloat scaleY, GLfloat scaleZ, 
+		GLfloat radius);
 
-	//void SetTransforms(GLfloat posX, GLfloat posY);
-	glm::mat4 GetObjTransform() { return this->m_transform.GetModMatrix(); };
-	//void SetShader
+	// draws GO with texture it was assigned
 	void DrawGOwithTexture();
 
+	// movement methods
+	void MoveUp();
+	void MoveDown();
 	void MoveLeft();
+	void MoveRight();
 
-	// all below needed?
-	void Move(GameObject& obj);
-	void MoveFrog();
-	void MoveBee();
-	void MovePumpkin();
-	void IncrementCounter(GLfloat increaseAmount);
+	void CollisionMove(GameObject& collidedObj);
+	
+	//getters
+	const glm::mat4 GetObjTransform() { return this->m_transform.GetModMatrix(); };
+	const glm::vec3 GetObjPos() { return *m_transform.GetPos(); }
+	const GLfloat GetObjRadius() { return m_mesh.GetRadius(); }
 };
-

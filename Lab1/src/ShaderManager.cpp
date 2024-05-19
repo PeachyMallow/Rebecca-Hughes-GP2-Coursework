@@ -1,31 +1,5 @@
 #include "ShaderManager.h"
 
-//Shader::Shader(const std::string& filename)
-//	: program(0), shaders{ NUM_SHADERS }, uniforms{ NUM_UNIFORMS }
-//{
-//	program = glCreateProgram();
-//
-//	shaders[0] = CreateShader(LoadShader(filename + ".vert"), GL_VERTEX_SHADER);
-//	shaders[1] = CreateShader(LoadShader(filename + ".frag"), GL_FRAGMENT_SHADER);
-//	
-//	for (GLuint& shader : shaders)
-//	{
-//		glAttachShader(program, shader);
-//	}
-//
-//	glBindAttribLocation(program, 0, "position");
-//	glBindAttribLocation(program, 1, "texCoord");
-//	
-//
-//	glLinkProgram(program); // creates exe that will run on the GPU shaders
-//	CheckShaderError(program, GL_LINK_STATUS, true, "Error: Shader program linking failed");
-//
-//	glValidateProgram(program); // check the entire program is valid
-//	CheckShaderError(program, GL_VALIDATE_STATUS, true, "Error: Shader program not valid");
-//
-//	uniforms[TRANSFORM_U] = glGetUniformLocation(program, "transform");
-//}
-
 ShaderManager::~ShaderManager()
 {
 	for (GLuint& shader : shaders)
@@ -39,7 +13,7 @@ ShaderManager::~ShaderManager()
 
 void ShaderManager::InitShaders(const std::string& filename)
 {
-	m_program = glCreateProgram(); // maybe move to constructor once hash tables are sorted
+	m_program = glCreateProgram();
 
 	shaders[0] = CreateShader(LoadShader("..\\res\\shaders\\" + filename + ".vert"), GL_VERTEX_SHADER);
 	shaders[1] = CreateShader(LoadShader("..\\res\\shaders\\" + filename + ".frag"), GL_FRAGMENT_SHADER);
@@ -53,10 +27,10 @@ void ShaderManager::InitShaders(const std::string& filename)
 	glBindAttribLocation(m_program, 1, "vertexTexCoord");
 	glBindAttribLocation(m_program, 2, "vertexNormals");
 
-	glLinkProgram(m_program); // creates exe that will run on the GPU shaders
+	glLinkProgram(m_program);
 	CheckShaderError(m_program, GL_LINK_STATUS, true, "Error: Shader program linking failed");
 
-	glValidateProgram(m_program); // check the entire program is valid
+	glValidateProgram(m_program);
 	CheckShaderError(m_program, GL_VALIDATE_STATUS, true, "Error: Shader program not valid");
 
 	GetUniformLocation("u_transform");
@@ -65,21 +39,23 @@ void ShaderManager::InitShaders(const std::string& filename)
 
 GLuint ShaderManager::CreateShader(const std::string& shaderSrc, GLuint shaderType)
 {
-	GLuint shaderID = glCreateShader(shaderType); //create shader based on specified type
+	GLuint shaderID = glCreateShader(shaderType);
 
-	if (shaderID == 0) //if == 0 shader not created
+	if (shaderID == 0)
+	{
 		std::cerr << "Error shader type creation failed " << shaderType << std::endl;
+	}
 
-	const GLchar* source[1] = { nullptr }; //convert strings into list of c-strings    DEPENDANT ON FUTURE WORK COULD MAKE NOT ARRAYS if so make string source in glShaderSource a ref
+	const GLchar* source[1] = { nullptr };
 	source[0] = shaderSrc.c_str();
 
-	GLint lengths[1] = { 0 }; // const? 
+	GLint lengths[1] = { 0 };
 	lengths[0] = shaderSrc.length();
 
-	glShaderSource(shaderID, 1, &source[0], &lengths[0]); //send source code to opengl
-	glCompileShader(shaderID); //get open gl to compile shader code
+	glShaderSource(shaderID, 1, &source[0], &lengths[0]);
+	glCompileShader(shaderID);
 
-	CheckShaderError(shaderID, GL_COMPILE_STATUS, false, "Error compiling shader!"); //check for compile error
+	CheckShaderError(shaderID, GL_COMPILE_STATUS, false, "Error compiling shader!");
 
 	return shaderID;
 }
@@ -151,10 +127,9 @@ const GLint ShaderManager::GetUniformLocation(const std::string& name)
 		return u_locations[name];
 	}
 
+	// if uniform doesn't exist, then create uniform
 	GLint location = glGetUniformLocation(m_program, name.c_str());
-
 	u_locations[name] = location;
-
 	return location;
 }
 
@@ -163,22 +138,12 @@ void ShaderManager::Bind()
 	glUseProgram(m_program);
 }
 
-void ShaderManager::SetLightPos(const Camera& camera)
-{
-	lightPos = glm::vec4(camera.GetCameraPos(), 1.0f);
-}
-
-// update light uniform with lights position to object
-// made x & y axes negative so light pos looks like it's coming from the camera
-void ShaderManager::UpdateLight(const glm::mat4& objTransform, const Camera& camera)        // could use camera instead of 'lightPos', could move to Update below 
-{
-	glm::vec4 lightPosVP = (objTransform * lightPos * glm::vec4(-1.0f, -1.0f, 1.0f, -1.0f));
-
-	glUniform3f(u_locations["u_lighting"], lightPosVP.x, lightPosVP.y, lightPosVP.z);
-}
-
-void ShaderManager::Update(const glm::mat4& objTransform, const Camera& camera)
+void ShaderManager::UpdateUniforms(const glm::mat4& objTransform, const Camera& camera)
 {
 	mvp = camera.GetMVPMatrix() * objTransform;
-	glUniformMatrix4fv(u_locations["u_transform"], 1, GLU_FALSE, &mvp[0][0]); // update transform uniform
+	glUniformMatrix4fv(u_locations["u_transform"], 1, GLU_FALSE, &mvp[0][0]);
+
+	// light pos is the camera
+	glm::vec4 lightPosVP = (objTransform * glm::vec4(camera.GetCameraPos(), 1.0f) * glm::vec4(-1.0f, -1.0f, 1.0f, -1.0f));
+	glUniform3f(u_locations["u_lighting"], lightPosVP.x, lightPosVP.y, lightPosVP.z);
 }

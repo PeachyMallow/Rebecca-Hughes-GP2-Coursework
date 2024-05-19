@@ -84,12 +84,10 @@
     <ClCompile Include="src\Audio.cpp" />
     <ClCompile Include="src\DisplayWindow.cpp" />
     <ClCompile Include="src\GameObject.cpp" />
-    <ClCompile Include="src\Light.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\GameManager.cpp" />
     <ClCompile Include="src\ObjMesh.cpp" />
     <ClCompile Include="src\obj_loader.cpp" />
-    <ClCompile Include="src\Physics.cpp" />
     <ClCompile Include="src\ShaderManager.cpp" />
     <ClCompile Include="src\stb_image.c" />
     <ClCompile Include="src\ObjTexture.cpp" />
@@ -99,12 +97,9 @@
     <ClInclude Include="include\Camera.h" />
     <ClInclude Include="include\DisplayWindow.h" />
     <ClInclude Include="include\GameObject.h" />
-    <ClInclude Include="include\Light.h" />
     <ClInclude Include="include\GameManager.h" />
     <ClInclude Include="include\ObjMesh.h" />
     <ClInclude Include="include\obj_loader.h" />
-    <ClInclude Include="include\Physics.h" />
-    <ClInclude Include="include\ResourceManager.h" />
     <ClInclude Include="include\ShaderManager.h" />
     <ClInclude Include="include\stb_image.h" />
     <ClInclude Include="include\ObjTexture.h" />

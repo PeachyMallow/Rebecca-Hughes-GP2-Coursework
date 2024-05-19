@@ -23,14 +23,13 @@ class Audio
 	SDL_AudioSpec m_audioSpec;
 	Uint8* m_wavStart;
 	Uint32 m_wavLength;
+	Uint8* pos;
 	
 public:
 	Audio(const std::string& fileName);
 	~Audio();
 
-	void PlayAudio(/*const bool loop*/);
-	void StopAudio();
+	void PlayAudio();
 	void SetUpDevice();
-	SDL_AudioDeviceID GetAudioDevice() { return this->m_audioDevice; }
-	Uint32 GetAudioLength() { return this->m_wavLength; };
+
 };

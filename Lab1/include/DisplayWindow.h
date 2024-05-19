@@ -20,7 +20,6 @@ public:
 	DisplayWindow(const int windowWidth, const int windowHeight, const glm::vec4 sceneColour, const char* windowTitle);
 	~DisplayWindow();
 
-	//void ClearDisplayWindow(const float r, const float g, const float b, const float a);
 	void ClearDisplay();
 	void SwapWindowBuffer();
 

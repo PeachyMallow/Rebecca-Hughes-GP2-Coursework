@@ -14,11 +14,9 @@ class ObjTexture
 
 public: 
 	ObjTexture() : m_textureHandler { 0 } {};
-	//Texture(const std::string& fileName);
 	~ObjTexture();
 
 	void LoadTexture(const std::string& fileName);
 	void BindTexture(unsigned int unit);
 
-	//GLint GetTextureLocation(const int texName);
 };

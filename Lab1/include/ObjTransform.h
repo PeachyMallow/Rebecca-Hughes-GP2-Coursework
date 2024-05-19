@@ -5,22 +5,21 @@
 
 struct ObjTransform
 {
-	ObjTransform(const glm::vec3& pos = glm::vec3(), const glm::vec3& rot = glm::vec3(), const glm::vec3& scale = glm::vec3(1.0f, 1.0f, 1.0f))
-	{
-		this->pos = pos; this->rot = rot; this->scale = scale;
-	}
+	ObjTransform(const glm::vec3& pos = glm::vec3(0.0f, 0.0f, 0.0f), 
+		const glm::vec3& rot = glm::vec3(0.0f, 0.0f, 0.0f), 
+		const glm::vec3& scale = glm::vec3(1.0f, 1.0f, 1.0f))
+		: pos(pos), rot(rot), scale(scale) {}
 
 	// getters
 	inline glm::vec3* GetPos() { return &pos; } 
 	inline glm::vec3* GetRot() { return &rot; }
-	inline glm::vec3* GetScale() { return &scale; }
 	
 	// setters
 	inline void SetPos(glm::vec3& pos) { this->pos = pos; } 
 	inline void SetRot(glm::vec3& rot) { this->rot = rot; }
 	inline void SetScale(glm::vec3& scale) { this->scale = scale; } 
 
-	inline glm::mat4 GetModMatrix() const // copied from lab 4 solution - look to implement myself or maybe this is the best way? Might not need as many local vars
+	inline glm::mat4 GetModMatrix() const
 	{
 		glm::mat4 posMat = glm::translate(pos);
 		glm::mat4 scaleMat = glm::scale(scale);
@@ -33,8 +32,8 @@ struct ObjTransform
 	}
 
 private:
-	// can lead to gimbal lock, using quaternions is suggested instead
 	glm::vec3 pos; 
 	glm::vec3 rot; 
 	glm::vec3 scale;
+
 };
