@@ -50,7 +50,7 @@ void GameObject::Move(GameObject& obj)
 	glm::vec3 objRot = *m_transform.GetRot();
 
 	obj.m_transform.SetPos(glm::vec3(objPos.x, objPos.y, objPos.z));
-	//obj.m_transform.SetRot(glm::vec3(objRot.x, objRot.y + m_counter, objRot.z));
+	obj.m_transform.SetRot(glm::vec3(objRot.x, objRot.y + m_counter, objRot.z));
 	//obj.m_transform.SetScale(glm::vec3(1.0f, 1.0f, 1.0f));
 }
 

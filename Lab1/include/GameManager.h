@@ -5,7 +5,7 @@
 #include <vector>
 
 #include "Camera.h"
-#include "Display.h" 
+#include "DisplayWindow.h" 
 #include "GameObject.h"
 #include "Mesh.h"
 #include "Shader.h"
@@ -36,8 +36,8 @@ class GameManager
 
 	bool Collided(glm::vec3 pos1, float radius1, glm::vec3 pos2, float radius2);
 
-	Display m_gameDisplay;
-	glm::vec4 m_sceneBGColour = { 0.11f, 0.07f, 0.033f, 1.0f }; // dark brown
+	DisplayWindow m_gameDisplay;
+	//glm::vec4 m_sceneBGColour = { 0.11f, 0.07f, 0.033f, 1.0f }; // dark brown
 	Camera m_Camera;
 	GameState _gameState;
 

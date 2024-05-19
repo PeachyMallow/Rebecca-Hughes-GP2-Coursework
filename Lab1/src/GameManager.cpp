@@ -3,13 +3,10 @@
 //global variables
 unsigned int indices[] = { 0, 1, 2 };
 
-//Transform transform2;
-//Transform transform3;
-
 GLfloat GameObject::m_counter = 0.0f;
 
 GameManager::GameManager() 
-	: m_gameDisplay(1024, 768, "Scene Window"), _gameState(GameState::PLAY), mouseX(0), mouseY(0), m_frameCounter(0)
+	: m_gameDisplay(1024, 768, glm::vec4(0.11f, 0.07f, 0.033f, 1.0f), "Scene Window"), _gameState(GameState::PLAY), mouseX(0), mouseY(0), m_frameCounter(0)
 {
 	//m_gameDisplay.InitDisplay();
 	m_Camera.InitCamera(glm::vec3(0, 0, -10), 70.0f, (float)m_gameDisplay.GetWidth() / m_gameDisplay.GetHeight(), 0.01f, 1000.0f);
@@ -231,7 +228,7 @@ void GameManager::ProcessInput()
 
 void GameManager::DrawGame()
 {
-	m_gameDisplay.ClearDisplay(m_sceneBGColour.x, m_sceneBGColour.y, m_sceneBGColour.z, m_sceneBGColour.w);
+	m_gameDisplay.ClearDisplay();
 	
 	// check for collision here?
 //if (Collided(transform1.GetPos(), mesh1.GetRadius(), transform2.GetPos(), mesh2.GetRadius()))
@@ -271,7 +268,7 @@ void GameManager::DrawGame()
 	//------------^
 
 	m_frameCounter = m_frameCounter + 0.005f;
-	m_gameDisplay.SwapBuffer();
+	m_gameDisplay.SwapWindowBuffer();
 }
 
 // collision detection               MIGHT NOT NEED ONE OF THE AXIS?
