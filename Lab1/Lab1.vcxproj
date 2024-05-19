@@ -87,12 +87,12 @@
     <ClCompile Include="src\Light.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\GameManager.cpp" />
-    <ClCompile Include="src\Mesh.cpp" />
+    <ClCompile Include="src\ObjMesh.cpp" />
     <ClCompile Include="src\obj_loader.cpp" />
     <ClCompile Include="src\Physics.cpp" />
-    <ClCompile Include="src\Shader.cpp" />
+    <ClCompile Include="src\ShaderManager.cpp" />
     <ClCompile Include="src\stb_image.c" />
-    <ClCompile Include="src\Texture.cpp" />
+    <ClCompile Include="src\ObjTexture.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Audio.h" />
@@ -101,14 +101,14 @@
     <ClInclude Include="include\GameObject.h" />
     <ClInclude Include="include\Light.h" />
     <ClInclude Include="include\GameManager.h" />
-    <ClInclude Include="include\Mesh.h" />
+    <ClInclude Include="include\ObjMesh.h" />
     <ClInclude Include="include\obj_loader.h" />
     <ClInclude Include="include\Physics.h" />
     <ClInclude Include="include\ResourceManager.h" />
-    <ClInclude Include="include\Shader.h" />
+    <ClInclude Include="include\ShaderManager.h" />
     <ClInclude Include="include\stb_image.h" />
-    <ClInclude Include="include\Texture.h" />
-    <ClInclude Include="include\Transform.h" />
+    <ClInclude Include="include\ObjTexture.h" />
+    <ClInclude Include="include\ObjTransform.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

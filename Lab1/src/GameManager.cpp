@@ -6,33 +6,22 @@ unsigned int indices[] = { 0, 1, 2 };
 GLfloat GameObject::m_counter = 0.0f;
 
 GameManager::GameManager() 
-	: m_gameDisplay(1024, 768, glm::vec4(0.11f, 0.07f, 0.033f, 1.0f), "Scene Window"), _gameState(GameState::PLAY), mouseX(0), mouseY(0), m_frameCounter(0)
+	: m_gameDisplay(1024, 768, glm::vec4(0.11f, 0.07f, 0.033f, 1.0f), "Scene Window"), 
+	m_camera(glm::vec3(0, 0, -10), 70.0f, (float)m_gameDisplay.GetWidth() / m_gameDisplay.GetHeight(), 0.01f, 1000.0f),
+	m_gameState(GameState::PLAY), mouseX(0), mouseY(0), m_frameCounter(0)
 {
-	//m_gameDisplay.InitDisplay();
-	m_Camera.InitCamera(glm::vec3(0, 0, -10), 70.0f, (float)m_gameDisplay.GetWidth() / m_gameDisplay.GetHeight(), 0.01f, 1000.0f);
-
 	// pre-allocates correct amount of memory needed for gameObjects per the enum in header
 	// to prevent reallocation of memory once objects are added
 	m_gameObjects.reserve(NUM_GAME_OBJECTS);
 
-	
-
-	//Mesh newMesh; // change name?
-	//Camera camera;
-	//
 //	//_gameState = static_cast<GameState>(GameState::PLAY); // IF USING MOVE TO SEPARATE FUNC? DO WE EVEN NEED GAMESTATE?
 // 
 //	_gameState = GameState::PLAY;
 //
-//	//Display* _backDisplay = new Display(1024, 768, "Labs"); // will need to delete at some point
 //	//std::unique_ptr<Display> _backDisplay = std::make_unique<Display>();
 }
 
-GameManager::~GameManager()
-{
-}
-
-void GameManager::Run()
+void GameManager::RunGame()
 {
 	this->LoadAndSetSystems(); // only runs once
 	this->GameLoop();
@@ -79,7 +68,7 @@ void GameManager::LoadAndSetSystems()
 
 void GameManager::GameLoop()
 {
-	while (_gameState != GameState::EXIT)
+	while (m_gameState != GameState::EXIT)
 	{
 		this->ProcessInput();
 		this->DrawGame();
@@ -90,21 +79,21 @@ void GameManager::ProcessInput()
 {
 	/*SDL_Event evnt;*/ // create SDL event
 
-	while (SDL_PollEvent(&evnt) != 0) //SDL_PollEvent - Event Loop (a queue)
+	while (SDL_PollEvent(&m_evnt) != 0) //SDL_PollEvent - Event Loop (a queue)
 	{
-		if (evnt.type == SDL_QUIT)
+		if (m_evnt.type == SDL_QUIT)
 		{
-			_gameState = GameState::EXIT;
+			m_gameState = GameState::EXIT;
 		}
 
-		switch (evnt.type)
+		switch (m_evnt.type)
 		{
 			// maybe W & S to move object in and out then mouse to drag along pos x & y
 			// PRINTING TWICE FOR SOME REASON
 			
 		case SDL_KEYDOWN:
 
-			switch (evnt.key.keysym.sym)
+			switch (m_evnt.key.keysym.sym)
 			{
 			//shaders
 			case SDLK_1:
@@ -195,7 +184,7 @@ void GameManager::ProcessInput()
 
 		case SDL_MOUSEBUTTONDOWN:
 			
-			if (evnt.button.button == SDL_BUTTON_LEFT)
+			if (m_evnt.button.button == SDL_BUTTON_LEFT)
 			{
 				//std::cout << "Left mouse button clicked!" << std::endl;
 			}
@@ -205,12 +194,12 @@ void GameManager::ProcessInput()
 
 		case SDL_MOUSEWHEEL:
 
-			if (evnt.wheel.y > 0)
+			if (m_evnt.wheel.y > 0)
 			{
 				//std::cout << "wheel scrolling up" << std::endl;
 			}
 
-			if (evnt.wheel.y < 0)
+			if (m_evnt.wheel.y < 0)
 			{
 				//std::cout << "wheel scrolling down" << std::endl;
 			}
@@ -238,12 +227,12 @@ void GameManager::DrawGame()
 //}
 // if pos reaches edge of window then turn back
 
-	m_shaders[currentShader].SetLightPos(m_Camera);
+	m_shaders[currentShader].SetLightPos(m_camera);
 
 	for (GameObject& obj : m_gameObjects)
 	{
-		m_shaders[currentShader].UpdateLight(obj.GetObjTransform(), m_Camera);
-		m_shaders[currentShader].Update(obj.GetObjTransform(), m_Camera);
+		m_shaders[currentShader].UpdateLight(obj.GetObjTransform(), m_camera);
+		m_shaders[currentShader].Update(obj.GetObjTransform(), m_camera);
 		obj.DrawGOwithTexture();
 		obj.Move(obj);
 	}
@@ -272,7 +261,7 @@ void GameManager::DrawGame()
 }
 
 // collision detection               MIGHT NOT NEED ONE OF THE AXIS?
-bool GameManager::Collided(glm::vec3 pos1, float radius1, glm::vec3 pos2, float radius2)
+bool GameManager::Collided(const glm::vec3 pos1, const float radius1, const glm::vec3 pos2, const float radius2)
 {
 	//if radius1 + radius2 < distance from centre points then colliding
 	// distance = ((x1 + x2) * (x1 + x2)) + ((y1 + y2) * (y1 + y2)) + ((z1 + z2) * (z1 + z2))

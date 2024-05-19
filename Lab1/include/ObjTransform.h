@@ -1,26 +1,14 @@
 #pragma once
 
 #include <glm/glm.hpp>
-#include <glm/gtx/transform.hpp> //all transformation functions
-//#include "camera.h"
+#include <glm/gtx/transform.hpp>
 
-struct Transform
+struct ObjTransform
 {
-	Transform(const glm::vec3& pos = glm::vec3(), const glm::vec3& rot = glm::vec3(), const glm::vec3& scale = glm::vec3(1.0f, 1.0f, 1.0f))
+	ObjTransform(const glm::vec3& pos = glm::vec3(), const glm::vec3& rot = glm::vec3(), const glm::vec3& scale = glm::vec3(1.0f, 1.0f, 1.0f))
 	{
 		this->pos = pos; this->rot = rot; this->scale = scale;
 	}
-
-	//inline glm::mat4 GetModelMatrix() const //runs at compile time
-	//{
-	//	glm::mat4 posMat = glm::translate(pos); 
-	//	glm::mat4 scaleMat = glm::scale(scale);
-	//	glm::mat4 rotX = glm::rotate(rot.x, glm::vec3(1.0f, 0.0f, 0.0f));
-	//	glm::mat4 rotY = glm::rotate(rot.y, glm::vec3(0.0f, 1.0f, 0.0f));
-	//	glm::mat4 rotZ = glm::rotate(rot.z, glm::vec3(0.0f, 0.0f, 1.0f)); 
-	//	glm::mat4 rotMat = rotX * rotY * rotZ;
-	//	return posMat * rotMat * scaleMat; // this order matters
-	//}
 
 	// getters
 	inline glm::vec3* GetPos() { return &pos; } 

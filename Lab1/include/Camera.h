@@ -1,36 +1,41 @@
 #pragma once
 
-#include <glm/glm.hpp>
+//#include <glm/glm.hpp>
 #include <glm/gtx/transform.hpp>
 
 struct Camera
 {
-	Camera() {}/*: projection(0), pos(0), forward(0), up(0) {}*/; // need a destructor?
+	Camera(const glm::vec3& pos, float fov, float aspect, float nearClip, float farClip)
+		: m_pos(pos), m_forward(0.0f, 0.0f, 1.0f), m_up(0.0f, 1.0f, 0.0f), m_projection(glm::perspective(fov, aspect, nearClip, farClip))
+	{
+		/*this->m_pos = pos;
+		this->m_forward = glm::vec3(0.0f, 0.0f, 1.0f);
+		this->m_up = glm::vec3(0.0f, 1.0f, 0.0f);
+		this->m_projection = glm::perspective(fov, aspect, nearClip, farClip);*/
+	}; // need a destructor?
 
-	void InitCamera(const glm::vec3& pos, float fov, float aspect, float nearClip, float farClip)
+	/*void InitCamera(const glm::vec3& pos, float fov, float aspect, float nearClip, float farClip)
 	{
 		this->pos = pos;
 		this->forward = glm::vec3(0.0f, 0.0f, 1.0f);
 		this->up = glm::vec3(0.0f, 1.0f, 0.0f);
 		this->projection = glm::perspective(fov, aspect, nearClip, farClip);
-	}
+	}*/
 
-	inline glm::mat4 GetMVP() const
+	const inline glm::mat4 GetMVPMatrix() const
 	{
-		return projection * glm::lookAt(pos, pos + forward, up);
+		return m_projection * glm::lookAt(m_pos, m_pos + m_forward, m_up);
 	}
 	
-	inline glm::mat4 GetCameraView() const
+	//const inline glm::mat4 GetCameraView() const
+	//{
+	//	return glm::lookAt(m_pos, m_pos + m_forward, m_up);
+	//}
+
+	const inline glm::vec3 GetCameraPos() const
 	{
-		return glm::lookAt(pos, pos + forward, up);
+		return m_pos;
 	}
-
-	inline glm::vec3 GetCameraPos() const
-	{
-		return pos;
-	}
-
-
 
 	//inline glm::mat4 GetLightProjection() const
 	//{
@@ -38,14 +43,9 @@ struct Camera
 	//}
 
 private:
-	glm::mat4 projection;
-	glm::vec3 pos;
-	glm::vec3 forward;
-	glm::vec3 up;
+	glm::vec3 m_pos;
+	glm::vec3 m_forward;
+	glm::vec3 m_up;
+	glm::mat4 m_projection;
 
 };
-
-
-
-
-

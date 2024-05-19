@@ -1,8 +1,4 @@
-#include "Texture.h"
-
-#include "stb_image.h"
-#include <cassert>
-#include <iostream>
+#include "ObjTexture.h"
 
 //Texture::Texture(const std::string& fileName)
 //{
@@ -37,14 +33,14 @@
 //	stbi_image_free(imageData); //delete data from CPU
 //}
 
-Texture::~Texture()
+ObjTexture::~ObjTexture()
 {
-	glDeleteTextures(1, &textureHandler); //(number of textures, address of texture(s))
+	glDeleteTextures(1, &m_textureHandler);
 }
 
-void Texture::LoadTexture(const std::string& fileName)
+void ObjTexture::LoadTexture(const std::string& fileName)
 {
-	int width, height, numComponents; // values set in stbi_load()
+	int width, height, numComponents;
 
 	unsigned char* imageData = stbi_load(("..\\res\\textures\\" + fileName + ".png").c_str(), &width, &height, &numComponents, 4); //loads image from file, and memory addresses where the program data can be saved
 
@@ -53,8 +49,8 @@ void Texture::LoadTexture(const std::string& fileName)
 		std::cerr << "Texture load failed for: " << fileName << stbi_failure_reason() << std::endl;
 	}
 
-	glGenTextures(1, &textureHandler); //texture amount & addresses
-	glBindTexture(GL_TEXTURE_2D, textureHandler); //(define type, texture we're working with)
+	glGenTextures(1, &m_textureHandler); //texture amount & addresses
+	glBindTexture(GL_TEXTURE_2D, m_textureHandler); //(define type, texture we're working with)
 
 	//setting wrapping behaviour for textures that fall outwidth 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT); //width
@@ -76,18 +72,10 @@ void Texture::LoadTexture(const std::string& fileName)
 	stbi_image_free(imageData); //delete data from CPU
 }
 
-void Texture::Bind(unsigned int unit)
+void ObjTexture::BindTexture(unsigned int unit)
 {
 	assert(unit >= 0 && unit <= 31); //check unit value is within range
 
 	glActiveTexture(GL_TEXTURE0 + unit); //which texture OpenGL is working with
-	glBindTexture(GL_TEXTURE_2D, textureHandler); //(texture type, texture to bind to unit)
-
+	glBindTexture(GL_TEXTURE_2D, m_textureHandler); //(texture type, texture to bind to unit)
 }
-
-//GLint Texture::GetTextureLocation(const int texName)
-//{
-//	//checks if texture exists
-//	//true - return texture
-//	//false - create new texture
-//}
