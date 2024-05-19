@@ -38,17 +38,17 @@ void GameManager::LoadAndSetSystems()
 	}
 
 	m_gameObjects[FROG].InitGameObj("Frog", "FrogTex", 
-		3.5f, -1.15f, 0.0f, 
+		3.5f, 0.0f, 0.0f,
 		1.0f, 1.0f, 0.75f, 
 		5.0f);
 	m_gameObjects[BEE].InitGameObj("Bee", "BeeTex", 
-		-3.5f, -1.15f, 0.0f, 
+		0.0f, 0.0f, 0.0f,
 		1.0f, 1.0f, 1.0f, 
-		5.0f);
+		3.0f);
 	m_gameObjects[PUMPKIN].InitGameObj("Pumpkin", "PumpkinTex", 
-		0.0f, 2.0f, 0.0f, 
+		-3.5f, 0.0f, 0.0f,
 		1.0f, 1.0f, 1.0f, 
-		16.0f);
+		8.0f);
 
 	SetShader(currentShader);
 	m_backgroundAudio->PlayAudio();
@@ -107,14 +107,10 @@ void GameManager::ProcessInput()
 				break;
 				
 			// game object selection
-			case SDLK_i:
-				selectedGameObj = FROG;
-				std::cout << "Frog Game Object Selected!" << std::endl;
-				break;
 
 			case SDLK_o:
-				selectedGameObj = BEE;
-				std::cout << "Bee Game Object Selected!" << std::endl;
+				selectedGameObj = FROG;
+				std::cout << "Frog Game Object Selected!" << std::endl;
 				break;
 
 			case SDLK_p:
@@ -153,9 +149,9 @@ void GameManager::RenderScene()
 {
 	m_gameDisplay.ClearDisplay();
 
-	if (Collided(m_gameObjects[selectedGameObj].GetObjPos(), m_gameObjects[selectedGameObj].GetObjRadius(), m_gameObjects[PUMPKIN].GetObjPos(), m_gameObjects[PUMPKIN].GetObjRadius()))
+	if (Collided(m_gameObjects[selectedGameObj].GetObjPos(), m_gameObjects[selectedGameObj].GetObjRadius(), m_gameObjects[BEE].GetObjPos(), m_gameObjects[BEE].GetObjRadius()))
 	{
-		m_gameObjects[selectedGameObj].CollisionMove(m_gameObjects[PUMPKIN]);
+		m_gameObjects[selectedGameObj].CollisionMove(m_gameObjects[BEE]);
 	}
 
 	for (GameObject& obj : m_gameObjects)
