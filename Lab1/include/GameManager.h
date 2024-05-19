@@ -22,7 +22,7 @@ enum Shaders : int { FOG, BASIC, TOON, RIM_L, NUM_SHADERS };
 //float counter;
 //Transform transform[3];
 
-class MainGame
+class GameManager
 {
 	// creates GameObjects. loading: models, textures, & setting initial transforms
 	void LoadAndSetSystems();
@@ -57,8 +57,8 @@ class MainGame
 	//Texture texture[NUM_OBJECTS];
 
 public:
-	MainGame() /*: _gameDisplay(1024, 768, "Game Window"), _gameState(GameState::PLAY), counter(0)*/;
-	~MainGame();
+	GameManager() /*: _gameDisplay(1024, 768, "Game Window"), _gameState(GameState::PLAY), counter(0)*/;
+	~GameManager();
 
 	void Run();
 

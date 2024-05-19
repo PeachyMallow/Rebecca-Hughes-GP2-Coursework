@@ -1,12 +1,12 @@
 
 //#include <iostream>
 
-#include "MainGame.h"
+#include "GameManager.h"
 
 int main(int argc, char** argv) //argument used to call SDL main
 {
-	MainGame mainGame;
-	mainGame.Run();
+	GameManager GameManager;
+	GameManager.Run();
 
 	return 0;
 }

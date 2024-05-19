@@ -1,4 +1,4 @@
-#include "MainGame.h"
+#include "GameManager.h"
 
 //global variables
 unsigned int indices[] = { 0, 1, 2 };
@@ -8,7 +8,7 @@ unsigned int indices[] = { 0, 1, 2 };
 
 GLfloat GameObject::m_counter = 0.0f;
 
-MainGame::MainGame() : m_gameDisplay(1024, 768, "Game Window"), _gameState(GameState::PLAY), mouseX(0), mouseY(0), m_frameCounter(0)
+GameManager::GameManager() : m_gameDisplay(1024, 768, "Scene Window"), _gameState(GameState::PLAY), mouseX(0), mouseY(0), m_frameCounter(0)
 {
 	m_gameDisplay.InitDisplay();
 	m_Camera.InitCamera(glm::vec3(0, 0, -10), 70.0f, (float)m_gameDisplay.GetWidth() / m_gameDisplay.GetHeight(), 0.01f, 1000.0f);
@@ -30,17 +30,17 @@ MainGame::MainGame() : m_gameDisplay(1024, 768, "Game Window"), _gameState(GameS
 //	//std::unique_ptr<Display> _backDisplay = std::make_unique<Display>();
 }
 
-MainGame::~MainGame()
+GameManager::~GameManager()
 {
 }
 
-void MainGame::Run()
+void GameManager::Run()
 {
 	this->LoadAndSetSystems(); // only runs once
 	this->GameLoop();
 }
 
-void MainGame::LoadAndSetSystems()
+void GameManager::LoadAndSetSystems()
 {
 	// load and shaders
 	m_shaders["Fog"].InitShaders("fogShader");
@@ -79,7 +79,7 @@ void MainGame::LoadAndSetSystems()
 	//m_shader[FROG].SetLightingUniform("u_lighting", m_Camera);
 }
 
-void MainGame::GameLoop()
+void GameManager::GameLoop()
 {
 	while (_gameState != GameState::EXIT)
 	{
@@ -88,7 +88,7 @@ void MainGame::GameLoop()
 	}
 }
 
-void MainGame::ProcessInput()
+void GameManager::ProcessInput()
 {
 	/*SDL_Event evnt;*/ // create SDL event
 
@@ -228,7 +228,7 @@ void MainGame::ProcessInput()
 	
 }
 
-void MainGame::DrawGame()
+void GameManager::DrawGame()
 {
 	m_gameDisplay.ClearDisplay(m_sceneBGColour.x, m_sceneBGColour.y, m_sceneBGColour.z, m_sceneBGColour.w);
 	
@@ -274,7 +274,7 @@ void MainGame::DrawGame()
 }
 
 // collision detection               MIGHT NOT NEED ONE OF THE AXIS?
-bool MainGame::Collided(glm::vec3 pos1, float radius1, glm::vec3 pos2, float radius2)
+bool GameManager::Collided(glm::vec3 pos1, float radius1, glm::vec3 pos2, float radius2)
 {
 	//if radius1 + radius2 < distance from centre points then colliding
 	// distance = ((x1 + x2) * (x1 + x2)) + ((y1 + y2) * (y1 + y2)) + ((z1 + z2) * (z1 + z2))
@@ -297,7 +297,7 @@ bool MainGame::Collided(glm::vec3 pos1, float radius1, glm::vec3 pos2, float rad
 	return false;
 }
 
-//void MainGame::SetTransforms(int objectType)
+//void GameManager::SetTransforms(int objectType)
 //{
 //	switch (objectType)
 //	{
@@ -332,12 +332,12 @@ bool MainGame::Collided(glm::vec3 pos1, float radius1, glm::vec3 pos2, float rad
 //	}
 //}
 
-void MainGame::SetShader(const std::string& shaderName)
+void GameManager::SetShader(const std::string& shaderName)
 {
 	m_shaders[shaderName].Bind();
 }
 
-//void MainGame::SetTexture()
+//void GameManager::SetTexture()
 //{
 //
 //}
