@@ -1,7 +1,7 @@
 #include "Display.h"
 
 // issue with passing the parameters when creating _gameDisplay in GameManager.h
-Display::Display(int windowWidth, int windowHeight, const std::string& windowTitle)
+Display::Display(int windowWidth, int windowHeight, const char* windowTitle)
 	: _window(nullptr), _screenWidth(windowWidth), _screenHeight(windowHeight), glContext(nullptr)
 { 
 	// initialise SDL library & all (?) subsystems

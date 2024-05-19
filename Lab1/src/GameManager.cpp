@@ -8,9 +8,10 @@ unsigned int indices[] = { 0, 1, 2 };
 
 GLfloat GameObject::m_counter = 0.0f;
 
-GameManager::GameManager() : m_gameDisplay(1024, 768, "Scene Window"), _gameState(GameState::PLAY), mouseX(0), mouseY(0), m_frameCounter(0)
+GameManager::GameManager() 
+	: m_gameDisplay(1024, 768, "Scene Window"), _gameState(GameState::PLAY), mouseX(0), mouseY(0), m_frameCounter(0)
 {
-	m_gameDisplay.InitDisplay();
+	//m_gameDisplay.InitDisplay();
 	m_Camera.InitCamera(glm::vec3(0, 0, -10), 70.0f, (float)m_gameDisplay.GetWidth() / m_gameDisplay.GetHeight(), 0.01f, 1000.0f);
 
 	// pre-allocates correct amount of memory needed for gameObjects per the enum in header

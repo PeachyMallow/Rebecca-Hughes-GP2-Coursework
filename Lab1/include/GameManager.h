@@ -36,7 +36,7 @@ class GameManager
 
 	bool Collided(glm::vec3 pos1, float radius1, glm::vec3 pos2, float radius2);
 
-	Display m_gameDisplay/*(1024, 768, const "Labs")*/;
+	Display m_gameDisplay;
 	glm::vec4 m_sceneBGColour = { 0.11f, 0.07f, 0.033f, 1.0f }; // dark brown
 	Camera m_Camera;
 	GameState _gameState;

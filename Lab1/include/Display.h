@@ -1,22 +1,22 @@
 #pragma once
 
-#include <GL\glew.h> // does SDL have to come before glew? 
 #include <SDL/SDL.h>
+#include <GL\glew.h> // does SDL have to come before glew? 
 
 #include <iostream>
-#include <string>
+//#include <string>
 
 class Display
 {
 	void ReturnError(std::string errorString);
 
-	SDL_Window* _window; // window pointer
-	int _screenWidth; // both width & height are floats in Lab 4
-	int _screenHeight;// do we need these these to be ints instead of casting to floats?
+	SDL_Window* _window;
+	int _screenWidth;
+	int _screenHeight;
 
 public:
-	Display() : _window(nullptr), _screenWidth(1024), _screenHeight(768), glContext(nullptr) {};
-	Display(int windowWidth, int windowHeight, const std::string& windowTitle);// <---- NOT USED, EITHER WORK OUT HOW TO USE OR DELETE
+	//Display() : _window(nullptr), _screenWidth(1024), _screenHeight(768), glContext(nullptr) {};// <---- USING??
+	Display(int windowWidth, int windowHeight, const char* windowTitle);
 	~Display();
 
 	void InitDisplay();
