@@ -14,6 +14,14 @@ GameManager::GameManager()
 	// to prevent reallocation of memory once objects are added
 	m_gameObjects.reserve(NUM_GAME_OBJECTS);
 
+	m_backgroundAudio = new Audio("..\\res\\sounds\\background.wav");
+	m_backgroundAudio->SetUpDevice();
+	//m_BGAudioDev = m_backgroundAudio->GetAudioDevice();
+
+	m_collisionAudio = new Audio("..\\res\\sounds\\bounce.wav");
+	m_collisionAudio->SetUpDevice();
+	m_BGAudioDev = m_collisionAudio->GetAudioLength();
+
 //	//_gameState = static_cast<GameState>(GameState::PLAY); // IF USING MOVE TO SEPARATE FUNC? DO WE EVEN NEED GAMESTATE?
 // 
 //	_gameState = GameState::PLAY;
@@ -41,7 +49,7 @@ void GameManager::LoadAndSetSystems()
 		m_gameObjects.emplace_back(GameObject());
 	}
 
-	m_gameObjects[FROG].InitGameObj("Frog", "CapeRainFrog_Diff", 2.0f, 0.0f, 4.0f);
+	m_gameObjects[FROG].InitGameObj("Frog", "FrogTex", 2.0f, 0.0f, 4.0f);
 	m_gameObjects[BEE].InitGameObj("Bee", "BeeTex", -2.0f, 0.0f, 4.0f);
 	m_gameObjects[PUMPKIN].InitGameObj("Pumpkin", "PumpkinTex", 0.0f, 0.0f, 4.0f);
 
@@ -122,10 +130,12 @@ void GameManager::ProcessInput()
 
 			case SDLK_w:
 				std::cout << "moving up" << std::endl;
+				m_backgroundAudio->PlayAudio();
 				break;
 
 			case SDLK_s:
 				std::cout << "moving down" << std::endl;
+				m_collisionAudio->PlayAudio();
 				break;
 
 			case SDLK_a:
@@ -219,6 +229,7 @@ void GameManager::DrawGame()
 {
 	m_gameDisplay.ClearDisplay();
 	
+	AudioStatus();
 	// check for collision here?
 //if (Collided(transform1.GetPos(), mesh1.GetRadius(), transform2.GetPos(), mesh2.GetRadius()))
 //{	
@@ -256,8 +267,28 @@ void GameManager::DrawGame()
 	//counter = counter + 0.005f;
 	//------------^
 
+	
 	m_frameCounter = m_frameCounter + 0.005f;
 	m_gameDisplay.SwapWindowBuffer();
+}
+
+void GameManager::AudioStatus()
+{
+	//m_backgroundAudio->GetAudioDevice
+	Uint32 length = m_BGAudioDev;
+	//std::cout << length << std::endl;
+
+	if (length == 0)
+	{
+		std::cout << length << std::endl;
+	}
+	/*switch (SDL_GetAudioDeviceStatus(m_BGAudioDev))
+	{
+	case SDL_AUDIO_STOPPED: std::cout << ("stopped\n") << std::endl; break;
+	case SDL_AUDIO_PLAYING: std::cout << ("playing\n") << std::endl; break;
+	case SDL_AUDIO_PAUSED: std::cout << ("paused\n") << std::endl; break;
+	default: std::cout << ("???") << std::endl; break;
+	}*/
 }
 
 // collision detection               MIGHT NOT NEED ONE OF THE AXIS?

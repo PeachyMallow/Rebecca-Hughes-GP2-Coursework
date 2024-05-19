@@ -4,6 +4,7 @@
 //#include <GL\glew.h>
 //#include <vector>
 
+#include "Audio.h"
 #include "Camera.h"
 #include "DisplayWindow.h" 
 #include "GameObject.h"
@@ -33,6 +34,7 @@ class GameManager
 	// binds shader to parameter passed
 	void SetShader(const std::string& shaderName);
 
+	void AudioStatus();
 	bool Collided(const glm::vec3 pos1, const float radius1, const glm::vec3 pos2, const float radius2);
 
 	DisplayWindow m_gameDisplay;
@@ -45,6 +47,10 @@ class GameManager
 	std::unordered_map<std::string, ShaderManager> m_shaders;
 
 	std::string currentShader = "Basic";
+	
+	Audio* m_backgroundAudio;
+	Audio* m_collisionAudio;
+	SDL_AudioDeviceID m_BGAudioDev;
 
 	SDL_Event m_evnt;
 	const Uint8* keyStates = SDL_GetKeyboardState(NULL);
